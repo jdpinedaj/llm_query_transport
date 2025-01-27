@@ -3,6 +3,7 @@
 #! Imports
 #  External libraries
 import streamlit as st
+from PIL import Image
 
 # Local imports
 from src.load_config import LoadConfig
@@ -32,14 +33,19 @@ st.markdown(
 
 
 #! Main function
-# st.cache() # Test this?
 def main():
 
     # Checking the external IP address
     external_ip = _get_external_ip()
     st.write(f"Streamlit server external IP: {external_ip}")
 
-    st.image(image="images/upv-logo.png")
+    # Load the image and resize it with a fixed height
+    original_image = Image.open("images/upv-logo.png")
+    fixed_height = 100  # Set your desired height
+    width_ratio = fixed_height / original_image.height
+    new_width = int(original_image.width * width_ratio)
+    resized_image = original_image.resize((new_width, fixed_height))
+    st.image(resized_image, use_container_width=False)
     # st.divider()
 
     with st.container(border=True):
@@ -81,23 +87,11 @@ def main():
                     # execute_test_query(user_input)
 
     # Creating a spacer and the restart button at the bottom
-    # st.divider()
     with st.container(border=True):
         col1, col2, col3 = st.columns([0.3, 0.4, 0.3])
 
         with col1:
             _download_data_csv()
-
-        # with col2:
-
-        #     # Title for all metrics
-        #     st.markdown("##### 📈 Database Metrics")
-
-        #     # Create placeholders for dynamic content
-        #     placeholders = {name: st.empty() for name in APPCFG.metrics_to_use}
-
-        #     # Update metrics periodically
-        #     _update_metrics(APPCFG.db_name, placeholders)
 
         with col3:
             if st.button("Clear Chat and Restart"):

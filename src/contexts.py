@@ -26,6 +26,7 @@ CONTEXT_FOR_CREATION_QUERY = """
   - Join `trip` and `weather` tables using `trip.zip_code = weather.zip_code` and `trip.start_date = weather.date`.
 - Use aggregate functions like COUNT(), AVG(), or SUM() where appropriate.
 - Use date/time functions for filtering or grouping data by date or time, especially in the `trip` and `weather` tables.
+- For dates, please take a look at the examples to see how to create the correct date format using substrings. For year is SUBSTRING(date, 6, 4), month is SUBSTRING(date, 1, 2), day is SUBSTRING(date, 4, 2).
 """
 
 
@@ -54,19 +55,15 @@ def _context_introduction() -> str:
     return CONTEXT_INTRODUCTION
 
 
-def _context_for_creation_query(
-    schema_name: str,
-) -> str:
+def _context_for_creation_query() -> str:
     """Returns the context for creating visits for one day."""
     # Formatting dates from %Y-%m-%d to %Y_%m_%d
-    return CONTEXT_FOR_CREATION_QUERY.format(
-        schema_name=schema_name,
-    )
+    return CONTEXT_FOR_CREATION_QUERY.format()
 
 
-def _table_info(schema_name: str) -> str:
+def _table_info() -> str:
     """Returns the table info."""
-    return TABLE_INFO.format(schema_name=schema_name)
+    return TABLE_INFO.format()
 
 
 #! EXAMPLES FOR VECTOR DATABASE
@@ -96,5 +93,9 @@ EXAMPLES_QUERIES = [
     {
         "input": "Find the total number of docks available across all stations at '2015-06-02 12:47:02'.",
         "query": "SELECT SUM(docks_available) AS total_docks FROM status WHERE time = '2015-06-02 12:47:02';",
+    },
+    {
+        "input": "How did different weather events impact ridership between august 21/2015 and august 31/2015?",
+        "query": "SELECT w.events,  COUNT(t.id) AS trip_count FROM trip t JOIN weather w ON t.zip_code = w.zip_code  AND (SUBSTR(t.start_date, 6, 4) || '-' || (CASE WHEN LENGTH(SUBSTR(t.start_date, 1, 1)) = 1 THEN '0' || SUBSTR(t.start_date, 1, 1) ELSE SUBSTR(t.start_date, 1, 1) END) || '-' || SUBSTR(t.start_date, 3, 2)) = (SUBSTR(w.date, 6, 4) || '-' || (CASE WHEN LENGTH(SUBSTR(w.date, 1, 1)) = 1 THEN '0' || SUBSTR(w.date, 1, 1) ELSE SUBSTR(w.date, 1, 1) END) || '-' || SUBSTR(w.date, 3, 2)) WHERE (SUBSTR(t.start_date, 6, 4) || '-' || (CASE WHEN LENGTH(SUBSTR(t.start_date, 1, 1)) = 1 THEN '0' || SUBSTR(t.start_date, 1, 1) ELSE SUBSTR(t.start_date, 1, 1) END) || '-' || SUBSTR(t.start_date, 3, 2)) BETWEEN '2015-08-21' AND '2015-08-31' GROUP BY w.events;",
     },
 ]

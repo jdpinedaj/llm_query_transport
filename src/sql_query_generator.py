@@ -104,9 +104,7 @@ class SQLQueryGenerator:
         Returns:
             Tuple[str, List[str]]: The context for the SQL query and a list of examples.
         """
-        context = _context_for_creation_query(
-            APPCFG.schema_name,
-        )
+        context = _context_for_creation_query()
         examples = EXAMPLES_QUERIES
 
         return context, examples
@@ -132,7 +130,7 @@ class SQLQueryGenerator:
         context_introduction = _context_introduction()
         additional_context, examples = self._get_context()
 
-        table_info = _table_info(APPCFG.schema_name)
+        table_info = _table_info()
 
         if not APPCFG.use_examples_vector_database:
             custom_template = """

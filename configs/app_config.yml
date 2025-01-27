@@ -1,42 +1,5 @@
-platform: "gcp" # Options: "aws", "gcp"
 model_to_use: "openai" # Options: "openai", "gemini"
 analysis_langsmith: true
-
-database_config:
-  initial_date: "2024-02-01"
-  final_date: "2024-09-30"
-  locations_brands_categories_directly_from_db: false # true would require a lot of memory and time to load the data. It is recommended to use the preloaded data (false). # TODO: true is going to need testing with the dictionary approach.
-  aws:
-    db_name: "mobile-insight"
-    schema_name: "visitation2_0"
-  gcp:
-    db_name: "tpp-shared-sql-dev-mobile-insight-dev"
-    schema_name: "visitation2_0"
-    gcp_project_id: "tpp-shared-sql-dev"
-
-monitoring_config:
-  time_to_refresh_metrics: 60 # in seconds
-  rds_metrics:                                        # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-metrics.html
-    CPUUtilization: 0                                 # CPU utilization percentage
-    DatabaseConnections: 0                            # Number of database connections
-    # ReadIOPS: 0
-    # WriteIOPS: 0
-    # FreeStorageSpace: 0
-    # ReadLatency: 0
-    # WriteLatency: 0
-    # DiskQueueDepth: 0
-    # FreeableMemory: 0
-    # SwapUsage: 0
-    # ReplicaLag: 0
-  cloudsql_metrics:                                   # https://cloud.google.com/sql/docs/mysql/admin-api/metrics
-    cpu/utilization: 0                                # CPU utilization percentage
-    postgresql/num_backends: 0                        # Number of database connections
-    # disk/bytes_used_by_data_type: 0
-    # postgresql/new_connection_count: 0
-    # disk/bytes_used_by_data_type: 0
-    # memory/total_usage: 0
-    # memory/usage: 0
-    # memory/utilization: 0
 
 model_general_parameters:                             # https://community.openai.com/t/cheat-sheet-mastering-temperature-and-top-p-in-chatgpt-api/172683
   temperature_generation_refinement: 0.1
@@ -50,19 +13,6 @@ openai_config:
   openai_model_generation_refinement: "gpt-4o"        # "gpt-4-turbo" # "gpt-4-0125-preview"  # "gpt-4-turbo-preview" # For more options, see: https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
   openai_model_transformation: "gpt-4-turbo"          # This is the model used for the transformation of the user query
   openai_embedding_model: "text-embedding-3-large" # "text-embedding-3-small" # "text-embedding-ada-002"
-
-gemini_config:
-  gemini_model_generation_refinement: "gemini-1.5-pro"
-  gemini_model_transformation: "gemini-1.5-pro"
-  gemini_embedding_model: "textembedding-gecko@latest"
-
-
-business_instructions:
-  default_type_query: "visitation"
-  default_granularity_geo: "state"
-  default_granularity_venue: "location_name"
-  default_top_all: "all"
-  columns_to_take_from_visitation_table: ["enter_timestamp", "dma_code"]
 
 dev_comments:
   save_logs: false

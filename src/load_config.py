@@ -23,26 +23,8 @@ class LoadConfig:
 
     Attributes:
         General:
-            platform (str): Platform to use, either "aws" or "gcp".
             model_to_use (str): Model to use, either "openai" or "gemini".
             analysis_langsmith (bool): Indicates if Langsmith secrets are loaded.
-
-        Database:
-            database_config (dict): Configuration parameters for the database.
-            initial_date (str): Initial date in "YYYY-MM-DD" format.
-            final_date (str): Final date in "YYYY-MM-DD" format.
-            recent_week_start_date (str): Start date of the recent week in "YYYY-MM-DD" format.
-            locations_brands_categories_directly_from_db (bool): Fetch locations, brands, and categories directly from the database.
-            db_name (str): Database name.
-            schema_name (str): Schema name.
-            gcp_project_id (str): GCP project ID if using GCP.
-
-        Monitoring:
-            monitoring_config (dict): Monitoring configuration parameters.
-            time_to_refresh_metrics (int): Time interval to refresh metrics in seconds.
-            rds_metrics (List[str]): List of AWS RDS metrics to monitor.
-            cloudsql_metrics (List[str]): List of GCP Cloud SQL metrics to monitor.
-            metrics_to_use (List[str]): Selected metrics based on platform.
 
         Models:
             model_general_parameters (dict): General model parameters.
@@ -57,20 +39,6 @@ class LoadConfig:
             openai_model_generation_refinement (str): Model used for generation refinement in OpenAI.
             openai_model_transformation (str): Model used for transformation in OpenAI.
             openai_embedding_model (str): Embedding model used in OpenAI.
-
-        Gemini:
-            gemini_config (dict): Gemini-specific configuration parameters.
-            gemini_model_generation_refinement (str): Model used for generation refinement in Gemini.
-            gemini_model_transformation (str): Model used for transformation in Gemini.
-            gemini_embedding_model (str): Embedding model used in Gemini.
-
-        Business Instructions:
-            business_instructions (dict): Business-specific instructions.
-            default_type_query (str): Default query type.
-            default_granularity_geo (str): Default geographic granularity.
-            default_granularity_venue (str): Default venue granularity.
-            default_top_all (int): Default setting for top-all queries.
-            columns_to_take_from_visitation_table (List[str]): Columns to extract from the visitation table.
 
         Developer Comments:
             dev_comments (dict): Developer-specific settings.
@@ -97,7 +65,6 @@ class LoadConfig:
         __init__: Initializes the configuration by loading parameters from the configuration file.
         _load_general_config: Loads general configuration parameters.
         _load_database_config: Loads database configuration parameters.
-        _load_monitoring_config: Loads monitoring configuration parameters.
         _load_model_parameters: Loads model parameters.
         _load_openai_config: Loads OpenAI configuration parameters.
         _load_gemini_config: Loads Gemini configuration parameters.
@@ -114,45 +81,15 @@ class LoadConfig:
 
         # Load general configuration
         self._load_general_config(app_config)
-        self._load_database_config(app_config)
-        self._load_monitoring_config(app_config)
         self._load_model_parameters(app_config)
         self._load_openai_config(app_config)
-        self._load_gemini_config(app_config)
-        self._load_business_instructions(app_config)
         self._load_developer_comments(app_config)
         self._load_secrets()
         self._load_llm_models()
 
     def _load_general_config(self, config: Dict[str, Any]) -> None:
-        self.platform = config["platform"]
         self.model_to_use = config["model_to_use"]
         self.analysis_langsmith = config["analysis_langsmith"]
-
-    def _load_database_config(self, config: Dict[str, Any]) -> None:
-        self.database_config = config["database_config"]
-        self.initial_date = self.database_config["initial_date"]
-        self.final_date = self.database_config["final_date"]
-        self.recent_week_start_date = (
-            datetime.strptime(self.final_date, "%Y-%m-%d") - timedelta(days=6)
-        ).strftime("%Y-%m-%d")
-        self.locations_brands_categories_directly_from_db = self.database_config[
-            "locations_brands_categories_directly_from_db"
-        ]
-
-        db_config = self.database_config[self.platform]
-        self.db_name = db_config["db_name"]
-        self.schema_name = db_config["schema_name"]
-        self.gcp_project_id = self.database_config.get("gcp", {}).get("gcp_project_id")
-
-    def _load_monitoring_config(self, config: Dict[str, Any]) -> None:
-        self.monitoring_config = config["monitoring_config"]
-        self.time_to_refresh_metrics = self.monitoring_config["time_to_refresh_metrics"]
-        self.rds_metrics = list(self.monitoring_config["rds_metrics"].keys())
-        self.cloudsql_metrics = list(self.monitoring_config["cloudsql_metrics"].keys())
-        self.metrics_to_use = (
-            self.rds_metrics if self.platform == "aws" else self.cloudsql_metrics
-        )
 
     def _load_model_parameters(self, config: Dict[str, Any]) -> None:
         self.model_general_parameters = config["model_general_parameters"]
@@ -181,30 +118,6 @@ class LoadConfig:
             "openai_model_transformation"
         ]
         self.openai_embedding_model = self.openai_config["openai_embedding_model"]
-
-    def _load_gemini_config(self, config: Dict[str, Any]) -> None:
-        self.gemini_config = config["gemini_config"]
-        self.gemini_model_generation_refinement = self.gemini_config[
-            "gemini_model_generation_refinement"
-        ]
-        self.gemini_model_transformation = self.gemini_config[
-            "gemini_model_transformation"
-        ]
-        self.gemini_embedding_model = self.gemini_config["gemini_embedding_model"]
-
-    def _load_business_instructions(self, config: Dict[str, Any]) -> None:
-        self.business_instructions = config["business_instructions"]
-        self.default_type_query = self.business_instructions["default_type_query"]
-        self.default_granularity_geo = self.business_instructions[
-            "default_granularity_geo"
-        ]
-        self.default_granularity_venue = self.business_instructions[
-            "default_granularity_venue"
-        ]
-        self.default_top_all = self.business_instructions["default_top_all"]
-        self.columns_to_take_from_visitation_table = self.business_instructions[
-            "columns_to_take_from_visitation_table"
-        ]
 
     def _load_developer_comments(self, config: Dict[str, Any]) -> None:
         self.dev_comments = config["dev_comments"]
