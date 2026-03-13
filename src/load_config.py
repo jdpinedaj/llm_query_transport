@@ -50,6 +50,7 @@ class LoadConfig:
 
         Secrets:
             SMC_API_KEY (str): SMC API key.
+            OPENAI_API_KEY (str): OPENAI API key.
             BASE_RELAY_URL (str): Base URL for OpenAI relay.
             RELAY_URL (str): Relay URL for OpenAI.
             LANGCHAIN_TRACING_V2 (str): Langsmith tracing environment variable.
@@ -133,6 +134,7 @@ class LoadConfig:
 
     def _load_secrets(self) -> None:
         self.SMC_API_KEY = st.secrets["SMC_API_KEY"]
+        self.OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
         self.BASE_RELAY_URL = st.secrets["BASE_RELAY_URL"]
         self.RELAY_URL = st.secrets["RELAY_URL"]
 
@@ -147,24 +149,40 @@ class LoadConfig:
         self.DB_NAME = st.secrets["DB_NAME_GCP"]
 
     def _load_llm_models(self) -> None:
+        # self.llm_model_generation_refinement = ChatOpenAI(
+        #     base_url=self.BASE_RELAY_URL,
+        #     model_name=self.openai_model_generation_refinement,
+        #     api_key=self.SMC_API_KEY,
+        #     temperature=self.temperature_generation_refinement,
+        #     top_p=self.top_p_generation_refinement,
+        # )
         self.llm_model_generation_refinement = ChatOpenAI(
-            base_url=self.BASE_RELAY_URL,
             model_name=self.openai_model_generation_refinement,
-            api_key=self.SMC_API_KEY,
+            api_key=self.OPENAI_API_KEY,
             temperature=self.temperature_generation_refinement,
             top_p=self.top_p_generation_refinement,
         )
 
+        # self.embeddings_model = OpenAIEmbeddings(
+        #     api_key=self.SMC_API_KEY,
+        #     base_url=self.BASE_RELAY_URL,
+        #     model=self.openai_embedding_model,
+        # )
         self.embeddings_model = OpenAIEmbeddings(
-            api_key=self.SMC_API_KEY,
-            base_url=self.BASE_RELAY_URL,
+            api_key=self.OPENAI_API_KEY,
             model=self.openai_embedding_model,
         )
 
+        # self.llm_model_transformation = ChatOpenAI(
+        #     base_url=self.BASE_RELAY_URL,
+        #     model_name=self.openai_model_transformation,
+        #     api_key=self.SMC_API_KEY,
+        #     temperature=self.temperature_transformation,
+        #     top_p=self.top_p_transformation,
+        # )
         self.llm_model_transformation = ChatOpenAI(
-            base_url=self.BASE_RELAY_URL,
             model_name=self.openai_model_transformation,
-            api_key=self.SMC_API_KEY,
+            api_key=self.OPENAI_API_KEY,
             temperature=self.temperature_transformation,
             top_p=self.top_p_transformation,
         )

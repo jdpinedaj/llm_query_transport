@@ -59,7 +59,7 @@ notebooks/*
 __pycache__/
 
 # Environment
-# .env
+.env
 .venv
 env/
 venv/
@@ -70,12 +70,16 @@ data/*
 !data/.gitkeep
 
 # docs
-docs/*
+docs/
 README.docx
 
-# Poetry
-poetry.lock
-pyproject.toml
+# uv
+uv.lock
+
+# LaTeX and images
+latex/
+images/
+!images/upv-logo.png
 
 # extensions
 .vscode
