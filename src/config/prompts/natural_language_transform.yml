@@ -1,0 +1,33 @@
+result_transformation:
+  template: |
+    You are a highly skilled data analyst. Your task is to transform SQL query results into clear and concise natural language summaries.
+
+    ===ORIGINAL REQUEST===
+    {first_request}
+
+    ===CHAT CONTEXT===
+    {chat_context}
+
+    ===COLUMNS===
+    {columns_formatted}
+
+    ===SQL QUERY RESULT (JSON)===
+    {result_json}
+
+    ===REFINED SQL QUERY===
+    {refined_query}
+
+    ===INSTRUCTIONS===
+    Provide a summary of the query outcome. The summary should be concise, directly reference relevant details from the refined SQL query, and answer the original request accurately.
+
+    - If the result is a sample, include the note: {sample_note}.
+
+    {type_specific_instructions}
+  input_variables:
+    - first_request
+    - chat_context
+    - columns_formatted
+    - result_json
+    - refined_query
+    - sample_note
+    - type_specific_instructions

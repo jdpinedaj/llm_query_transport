@@ -1,0 +1,53 @@
+model_to_use: "openai"
+analysis_langsmith: true
+
+model_general_parameters:
+  temperature_generation_refinement: 0.1
+  top_p_generation_refinement: 0.1
+  temperature_transformation: 0.4
+  top_p_transformation: 0.7
+  use_examples_vector_database: true
+
+openai_config:
+  openai_model_generation_refinement: "gpt-4o"
+  openai_model_transformation: "gpt-4-turbo"
+  openai_embedding_model: "text-embedding-3-large"
+
+database:
+  host: "localhost"
+  port: "5432"
+  name: "bike_1"
+
+query_parameters:
+  decimal_places: 4
+  sample_size: 50
+  few_shot_k: 5
+  top_k: 1
+  memory_window_size: 5
+
+ui:
+  page_title: "LLM Query Transport"
+  page_icon: "🚲"
+  logo_image: "images/upv-logo.png"
+  logo_width: 180
+  container_height: 700
+  input_height: 150
+  max_container_width: "1800px"
+  outer_columns: [0.05, 0.90, 0.05]
+  content_columns: [0.40, 0.60]
+  input_columns: [0.15, 0.70, 0.15]
+  button_columns: [0.15, 0.35, 0.35, 0.15]
+  default_query: "Get the average duration of trips grouped by zip codes"
+  welcome_message: >-
+    Hello! Ask me any question about the bike-sharing database.
+    I can help you query stations, trips, weather, and bike availability data.
+  spinner_text: "Thinking..."
+  csv_filename_prefix: "query_results"
+  csv_timestamp_format: "%Y%m%d_%H%M%S"
+
+dev_comments:
+  save_logs: false
+  include_refinement_process: false
+  show_dates_details_extraction: false
+  show_developer_comments: false
+  show_refined_query: false
