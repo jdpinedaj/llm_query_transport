@@ -1,0 +1,1211 @@
+{
+  "metadata": {
+    "dataset": "bike_1",
+    "source": "Spider benchmark (adapted for PostgreSQL)",
+    "created": "2026-03-16",
+    "description": "Evaluation test set for text-to-SQL pipeline. 200 test cases at three difficulty levels, all distinct from the 8 few-shot examples in contexts.yml.",
+    "total_cases": 200
+  },
+  "test_cases": [
+    {
+      "id": "E01",
+      "question": "How many stations are there in the database?",
+      "gold_sql": "SELECT COUNT(*) AS station_count FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E02",
+      "question": "List the names and cities of all stations in Mountain View.",
+      "gold_sql": "SELECT name, city FROM station WHERE city = 'Mountain View';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E03",
+      "question": "What is the earliest station installation date?",
+      "gold_sql": "SELECT MIN(installation_date) AS earliest_date FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E04",
+      "question": "How many distinct cities have bike stations?",
+      "gold_sql": "SELECT COUNT(DISTINCT city) AS city_count FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E05",
+      "question": "What is the longest trip duration in seconds?",
+      "gold_sql": "SELECT MAX(duration) AS max_duration FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E06",
+      "question": "List all distinct subscription types from the trips.",
+      "gold_sql": "SELECT DISTINCT subscription_type FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E07",
+      "question": "What is the total number of trips in the database?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E08",
+      "question": "What is the shortest trip duration in seconds?",
+      "gold_sql": "SELECT MIN(duration) AS min_duration FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E09",
+      "question": "What is the average trip duration?",
+      "gold_sql": "SELECT ROUND(AVG(duration), 2) AS avg_duration FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E10",
+      "question": "How many trips were taken by subscribers?",
+      "gold_sql": "SELECT COUNT(*) AS subscriber_trips FROM trip WHERE subscription_type = 'Subscriber';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E11",
+      "question": "List all station names in San Francisco.",
+      "gold_sql": "SELECT name FROM station WHERE city = 'San Francisco';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E12",
+      "question": "What is the maximum dock count among all stations?",
+      "gold_sql": "SELECT MAX(dock_count) AS max_docks FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E13",
+      "question": "How many stations are in Palo Alto?",
+      "gold_sql": "SELECT COUNT(*) AS station_count FROM station WHERE city = 'Palo Alto';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E14",
+      "question": "What is the latest station installation date?",
+      "gold_sql": "SELECT MAX(installation_date) AS latest_date FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E15",
+      "question": "How many trips have zip code 94107?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip WHERE zip_code = '94107';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E16",
+      "question": "What is the total duration of all trips in seconds?",
+      "gold_sql": "SELECT SUM(duration) AS total_duration FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E17",
+      "question": "How many distinct zip codes are in the trip table?",
+      "gold_sql": "SELECT COUNT(DISTINCT zip_code) AS zip_count FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E18",
+      "question": "How many distinct bike IDs are in the trip table?",
+      "gold_sql": "SELECT COUNT(DISTINCT bike_id) AS bike_count FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E19",
+      "question": "What is the minimum dock count among all stations?",
+      "gold_sql": "SELECT MIN(dock_count) AS min_docks FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E20",
+      "question": "How many stations are in Redwood City?",
+      "gold_sql": "SELECT COUNT(*) AS station_count FROM station WHERE city = 'Redwood City';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E21",
+      "question": "What is the highest maximum temperature recorded in the weather table?",
+      "gold_sql": "SELECT MAX(max_temperature_f) AS highest_temp FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E22",
+      "question": "What is the lowest minimum temperature recorded?",
+      "gold_sql": "SELECT MIN(min_temperature_f) AS lowest_temp FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E23",
+      "question": "How many weather records are there in the database?",
+      "gold_sql": "SELECT COUNT(*) AS record_count FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E24",
+      "question": "List all distinct weather event types.",
+      "gold_sql": "SELECT DISTINCT events FROM weather WHERE events IS NOT NULL AND events != '';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E25",
+      "question": "How many distinct zip codes are in the weather table?",
+      "gold_sql": "SELECT COUNT(DISTINCT zip_code) AS zip_count FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E26",
+      "question": "What is the average dock count across all stations?",
+      "gold_sql": "SELECT ROUND(AVG(dock_count), 2) AS avg_docks FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E27",
+      "question": "How many trips started from station 50?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip WHERE start_station_id = 50;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E28",
+      "question": "List the name and city of the station with ID 69.",
+      "gold_sql": "SELECT name, city FROM station WHERE id = 69;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E29",
+      "question": "How many trips ended at station 70?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip WHERE end_station_id = 70;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E30",
+      "question": "What is the total number of status records in the database?",
+      "gold_sql": "SELECT COUNT(*) AS status_count FROM status;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E31",
+      "question": "What is the maximum number of bikes available recorded at any station?",
+      "gold_sql": "SELECT MAX(bikes_available) AS max_bikes FROM status;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E32",
+      "question": "How many trips were taken by customers?",
+      "gold_sql": "SELECT COUNT(*) AS customer_trips FROM trip WHERE subscription_type = 'Customer';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E33",
+      "question": "What is the average mean humidity recorded in the weather table?",
+      "gold_sql": "SELECT ROUND(AVG(mean_humidity), 2) AS avg_humidity FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E34",
+      "question": "List the names of all stations in San Jose.",
+      "gold_sql": "SELECT name FROM station WHERE city = 'San Jose';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E35",
+      "question": "What is the maximum wind speed ever recorded?",
+      "gold_sql": "SELECT MAX(max_wind_speed_mph) AS max_wind FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "M01",
+      "question": "How many stations are in each city?",
+      "gold_sql": "SELECT city, COUNT(*) AS station_count FROM station GROUP BY city ORDER BY station_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M02",
+      "question": "What is the total number of trips for each subscription type?",
+      "gold_sql": "SELECT subscription_type, COUNT(*) AS trip_count FROM trip GROUP BY subscription_type;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M03",
+      "question": "What is the average dock count per city?",
+      "gold_sql": "SELECT city, ROUND(AVG(dock_count), 2) AS avg_dock_count FROM station GROUP BY city;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M04",
+      "question": "Find the top 5 stations with the highest dock count.",
+      "gold_sql": "SELECT name, dock_count FROM station ORDER BY dock_count DESC LIMIT 5;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M05",
+      "question": "How many trips started in each month of 2015?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM start_date) AS month, COUNT(*) AS trip_count FROM trip WHERE EXTRACT(YEAR FROM start_date) = 2015 GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M06",
+      "question": "What was the average mean temperature grouped by zip code?",
+      "gold_sql": "SELECT zip_code, ROUND(AVG(mean_temperature_f), 2) AS avg_temp FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M07",
+      "question": "How many weather records had any precipitation?",
+      "gold_sql": "SELECT COUNT(*) AS rainy_days FROM weather WHERE precipitation_inches != '0' AND precipitation_inches != '';",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M08",
+      "question": "What are the top 3 most common zip codes in the trip table?",
+      "gold_sql": "SELECT zip_code, COUNT(*) AS trip_count FROM trip GROUP BY zip_code ORDER BY trip_count DESC LIMIT 3;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M09",
+      "question": "How many stations were installed in each year?",
+      "gold_sql": "SELECT EXTRACT(YEAR FROM installation_date) AS year, COUNT(*) AS station_count FROM station GROUP BY year ORDER BY year;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M10",
+      "question": "What is the average maximum temperature for each month across all years?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM date) AS month, ROUND(AVG(max_temperature_f), 2) AS avg_max_temp FROM weather GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M11",
+      "question": "List the top 10 longest trips by duration.",
+      "gold_sql": "SELECT id, duration, start_station_id, end_station_id FROM trip ORDER BY duration DESC LIMIT 10;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M12",
+      "question": "What is the total number of trips per zip code?",
+      "gold_sql": "SELECT zip_code, COUNT(*) AS trip_count FROM trip GROUP BY zip_code ORDER BY trip_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M13",
+      "question": "Which city has the most stations?",
+      "gold_sql": "SELECT city, COUNT(*) AS station_count FROM station GROUP BY city ORDER BY station_count DESC LIMIT 1;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M14",
+      "question": "What is the average number of bikes available per station ID?",
+      "gold_sql": "SELECT station_id, ROUND(AVG(bikes_available), 2) AS avg_bikes FROM status GROUP BY station_id ORDER BY avg_bikes DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M15",
+      "question": "How many trips started in each year?",
+      "gold_sql": "SELECT EXTRACT(YEAR FROM start_date) AS year, COUNT(*) AS trip_count FROM trip GROUP BY year ORDER BY year;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M16",
+      "question": "Find the stations with dock count greater than 20.",
+      "gold_sql": "SELECT id, name, dock_count FROM station WHERE dock_count > 20 ORDER BY dock_count DESC, id;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M17",
+      "question": "What is the average trip duration for trips with zip code 94107?",
+      "gold_sql": "SELECT ROUND(AVG(duration), 2) AS avg_duration FROM trip WHERE zip_code = '94107';",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M18",
+      "question": "How many trips lasted more than one hour?",
+      "gold_sql": "SELECT COUNT(*) AS long_trips FROM trip WHERE duration > 3600;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M19",
+      "question": "What is the total dock count per city?",
+      "gold_sql": "SELECT city, SUM(dock_count) AS total_docks FROM station GROUP BY city ORDER BY total_docks DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M20",
+      "question": "List the stations installed in August 2013.",
+      "gold_sql": "SELECT name, city, installation_date FROM station WHERE EXTRACT(YEAR FROM installation_date) = 2013 AND EXTRACT(MONTH FROM installation_date) = 8 ORDER BY installation_date;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M21",
+      "question": "What are the top 5 busiest start stations by trip count?",
+      "gold_sql": "SELECT start_station_id, COUNT(*) AS trip_count FROM trip GROUP BY start_station_id ORDER BY trip_count DESC LIMIT 5;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M22",
+      "question": "What is the average docks available per station ID?",
+      "gold_sql": "SELECT station_id, ROUND(AVG(docks_available), 2) AS avg_docks FROM status GROUP BY station_id ORDER BY avg_docks DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M23",
+      "question": "How many days had a maximum temperature above 90 degrees?",
+      "gold_sql": "SELECT COUNT(*) AS hot_days FROM weather WHERE max_temperature_f > 90;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M24",
+      "question": "What is the average mean wind speed by zip code?",
+      "gold_sql": "SELECT zip_code, ROUND(AVG(mean_wind_speed_mph), 2) AS avg_wind FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M25",
+      "question": "Find the top 5 busiest end stations by trip count.",
+      "gold_sql": "SELECT end_station_id, COUNT(*) AS trip_count FROM trip GROUP BY end_station_id ORDER BY trip_count DESC LIMIT 5;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M26",
+      "question": "How many trips were taken each day of the week?",
+      "gold_sql": "SELECT EXTRACT(DOW FROM start_date) AS day_of_week, COUNT(*) AS trip_count FROM trip GROUP BY day_of_week ORDER BY day_of_week;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M27",
+      "question": "What is the average cloud cover by zip code?",
+      "gold_sql": "SELECT zip_code, ROUND(AVG(cloud_cover), 2) AS avg_cloud FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M28",
+      "question": "Which zip codes had the most weather event days?",
+      "gold_sql": "SELECT zip_code, COUNT(*) AS event_count FROM weather WHERE events IS NOT NULL AND events != '' GROUP BY zip_code ORDER BY event_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M29",
+      "question": "How many trips had the same start and end station?",
+      "gold_sql": "SELECT COUNT(*) AS round_trips FROM trip WHERE start_station_id = end_station_id;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M30",
+      "question": "What is the minimum and maximum mean temperature for zip code 94107?",
+      "gold_sql": "SELECT MIN(mean_temperature_f) AS min_temp, MAX(mean_temperature_f) AS max_temp FROM weather WHERE zip_code = '94107';",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M31",
+      "question": "List the bike IDs with more than 40 trips.",
+      "gold_sql": "SELECT bike_id, COUNT(*) AS trip_count FROM trip GROUP BY bike_id HAVING COUNT(*) > 40 ORDER BY trip_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M32",
+      "question": "What is the average trip duration per month across all years?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM start_date) AS month, ROUND(AVG(duration), 2) AS avg_duration FROM trip GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M33",
+      "question": "How many stations have a dock count of exactly 15?",
+      "gold_sql": "SELECT COUNT(*) AS station_count FROM station WHERE dock_count = 15;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M34",
+      "question": "What are the distinct weather events recorded for zip code 94107?",
+      "gold_sql": "SELECT DISTINCT events FROM weather WHERE zip_code = '94107' AND events IS NOT NULL AND events != '';",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M35",
+      "question": "Find the average maximum humidity per month.",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM date) AS month, ROUND(AVG(max_humidity), 2) AS avg_max_humidity FROM weather GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "H01",
+      "question": "List the names of start stations for trips with duration longer than 1000 seconds.",
+      "gold_sql": "SELECT DISTINCT s.name FROM trip t JOIN station s ON t.start_station_id = s.id WHERE t.duration > 1000;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H02",
+      "question": "For each city, what is the average trip duration for trips starting from stations in that city?",
+      "gold_sql": "SELECT s.city, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.city;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H03",
+      "question": "Which station had the highest average number of bikes available?",
+      "gold_sql": "SELECT s.name, ROUND(AVG(st.bikes_available), 2) AS avg_bikes FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.name ORDER BY avg_bikes DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H04",
+      "question": "What is the total number of trips on days when the max temperature exceeded 80 degrees in zip code 94107?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.max_temperature_f > 80 AND w.zip_code = '94107';",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H05",
+      "question": "Find the station name that had the most trips starting from it.",
+      "gold_sql": "SELECT s.name, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.name ORDER BY trip_count DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H06",
+      "question": "Which city had the most trips starting from its stations?",
+      "gold_sql": "SELECT s.city, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.city ORDER BY trip_count DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H07",
+      "question": "What is the average trip duration for trips starting and ending in different cities?",
+      "gold_sql": "SELECT ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id WHERE s1.city != s2.city;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H08",
+      "question": "For each start station, what is the average trip duration and total number of trips?",
+      "gold_sql": "SELECT s.name, COUNT(t.id) AS trip_count, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.name ORDER BY trip_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H09",
+      "question": "Which station had the lowest average number of docks available?",
+      "gold_sql": "SELECT s.name, ROUND(AVG(st.docks_available), 2) AS avg_docks FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.name ORDER BY avg_docks ASC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H10",
+      "question": "What is the average trip duration on rainy days versus non-rainy days?",
+      "gold_sql": "SELECT CASE WHEN w.events LIKE '%Rain%' THEN 'Rainy' ELSE 'Not Rainy' END AS weather_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY weather_type;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H11",
+      "question": "Find the top 3 stations with the most trips ending at them.",
+      "gold_sql": "SELECT s.name, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.end_station_id = s.id GROUP BY s.name ORDER BY trip_count DESC LIMIT 3;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H12",
+      "question": "What is the average number of bikes available per city?",
+      "gold_sql": "SELECT s.city, ROUND(AVG(st.bikes_available), 2) AS avg_bikes FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.city ORDER BY avg_bikes DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H13",
+      "question": "How many trips started from stations in each city during 2015?",
+      "gold_sql": "SELECT s.city, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.start_station_id = s.id WHERE EXTRACT(YEAR FROM t.start_date) = 2015 GROUP BY s.city ORDER BY trip_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H14",
+      "question": "Which station pair (start to end) had the most trips?",
+      "gold_sql": "SELECT s1.name AS start_station, s2.name AS end_station, COUNT(t.id) AS trip_count FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id GROUP BY s1.name, s2.name ORDER BY trip_count DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H15",
+      "question": "What is the average trip duration by weather event type?",
+      "gold_sql": "SELECT w.events, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.events IS NOT NULL AND w.events != '' GROUP BY w.events ORDER BY avg_duration DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H16",
+      "question": "For each city, how many trips ended at stations in that city?",
+      "gold_sql": "SELECT s.city, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.end_station_id = s.id GROUP BY s.city ORDER BY trip_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H17",
+      "question": "Show the daily temperature and trip count for zip code 94107.",
+      "gold_sql": "SELECT w.date, w.mean_temperature_f, COUNT(t.id) AS trip_count FROM weather w JOIN trip t ON w.zip_code = t.zip_code AND w.date = CAST(t.start_date AS DATE) WHERE w.zip_code = '94107' GROUP BY w.date, w.mean_temperature_f ORDER BY w.date;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H18",
+      "question": "Find stations where the average bikes available is greater than 10.",
+      "gold_sql": "SELECT s.id, s.name, ROUND(AVG(st.bikes_available), 2) AS avg_bikes FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.id, s.name HAVING ROUND(AVG(st.bikes_available), 2) > 10 ORDER BY avg_bikes DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H19",
+      "question": "What is the total number of trips per city pair (start city to end city)?",
+      "gold_sql": "SELECT s1.city AS start_city, s2.city AS end_city, COUNT(t.id) AS trip_count FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id GROUP BY s1.city, s2.city ORDER BY trip_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H20",
+      "question": "What was the average trip duration on days when it rained in zip code 94107?",
+      "gold_sql": "SELECT ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.events LIKE '%Rain%' AND w.zip_code = '94107';",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H21",
+      "question": "Which station had the most round trips (same start and end station)?",
+      "gold_sql": "SELECT s.name, COUNT(t.id) AS round_trip_count FROM trip t JOIN station s ON t.start_station_id = s.id WHERE t.start_station_id = t.end_station_id GROUP BY s.name ORDER BY round_trip_count DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H22",
+      "question": "What is the average trip duration per subscription type for trips starting from San Francisco stations?",
+      "gold_sql": "SELECT t.subscription_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id WHERE s.city = 'San Francisco' GROUP BY t.subscription_type;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H23",
+      "question": "Which start station in San Francisco had the longest average trip duration?",
+      "gold_sql": "SELECT s.name, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id WHERE s.city = 'San Francisco' GROUP BY s.name ORDER BY avg_duration DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H24",
+      "question": "How many subscriber and customer trips started from each city?",
+      "gold_sql": "SELECT s.city, t.subscription_type, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.city, t.subscription_type ORDER BY s.city, t.subscription_type;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H25",
+      "question": "Find the station with the most docks available on average.",
+      "gold_sql": "SELECT s.id, s.name, ROUND(AVG(st.docks_available), 2) AS avg_docks FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.id, s.name ORDER BY avg_docks DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H26",
+      "question": "What is the average trip duration on hot days (max temp above 80) versus cold days (max temp below 60)?",
+      "gold_sql": "SELECT CASE WHEN w.max_temperature_f > 80 THEN 'Above 80F' WHEN w.max_temperature_f < 60 THEN 'Below 60F' END AS temp_category, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.max_temperature_f > 80 OR w.max_temperature_f < 60 GROUP BY temp_category;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H27",
+      "question": "For each station, what percentage of trips starting there are by subscribers?",
+      "gold_sql": "SELECT s.name, ROUND(COUNT(CASE WHEN t.subscription_type = 'Subscriber' THEN 1 END) * 100.0 / COUNT(*), 2) AS subscriber_pct FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.name ORDER BY subscriber_pct DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H28",
+      "question": "Which day had the most trips and what was the weather like that day in zip code 94107?",
+      "gold_sql": "SELECT CAST(t.start_date AS DATE) AS trip_date, COUNT(t.id) AS trip_count, w.max_temperature_f, w.events FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.zip_code = '94107' GROUP BY trip_date, w.max_temperature_f, w.events ORDER BY trip_count DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H29",
+      "question": "What is the total number of trips between San Francisco and San Jose in both directions?",
+      "gold_sql": "SELECT COUNT(t.id) AS trip_count FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id WHERE (s1.city = 'San Francisco' AND s2.city = 'San Jose') OR (s1.city = 'San Jose' AND s2.city = 'San Francisco');",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H30",
+      "question": "What is the average number of bikes available at each station by city, for stations with more than 5 average bikes?",
+      "gold_sql": "SELECT s.city, s.name, ROUND(AVG(st.bikes_available), 2) AS avg_bikes FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.city, s.name HAVING ROUND(AVG(st.bikes_available), 2) > 5 ORDER BY s.city, avg_bikes DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "E36",
+      "question": "What is the average maximum dew point recorded in the weather table?",
+      "gold_sql": "SELECT ROUND(AVG(max_dew_point_f), 2) AS avg_max_dew FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E37",
+      "question": "How many stations have a latitude greater than 37.4?",
+      "gold_sql": "SELECT COUNT(*) AS station_count FROM station WHERE lat > 37.4;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E38",
+      "question": "What is the maximum number of docks available recorded in the status table?",
+      "gold_sql": "SELECT MAX(docks_available) AS max_docks FROM status;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E39",
+      "question": "How many trips used bike ID 100?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip WHERE bike_id = 100;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E40",
+      "question": "What is the average minimum humidity recorded in the weather table?",
+      "gold_sql": "SELECT ROUND(AVG(min_humidity), 2) AS avg_min_humidity FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E41",
+      "question": "How many weather records have cloud cover greater than 5?",
+      "gold_sql": "SELECT COUNT(*) AS cloudy_days FROM weather WHERE cloud_cover > 5;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E42",
+      "question": "What is the maximum sea level pressure ever recorded?",
+      "gold_sql": "SELECT MAX(max_sea_level_pressure_inches) AS max_pressure FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E43",
+      "question": "List the names and dock counts of all stations in Redwood City.",
+      "gold_sql": "SELECT name, dock_count FROM station WHERE city = 'Redwood City';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E44",
+      "question": "What is the average mean visibility in miles across all weather records?",
+      "gold_sql": "SELECT ROUND(AVG(mean_visibility_miles), 2) AS avg_visibility FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E45",
+      "question": "What is the minimum number of docks available ever recorded?",
+      "gold_sql": "SELECT MIN(docks_available) AS min_docks FROM status;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E46",
+      "question": "What is the minimum dew point ever recorded?",
+      "gold_sql": "SELECT MIN(min_dew_point_f) AS min_dew FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E47",
+      "question": "How many stations have more than 20 docks?",
+      "gold_sql": "SELECT COUNT(*) AS station_count FROM station WHERE dock_count > 20;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E48",
+      "question": "What is the total dock count across all stations?",
+      "gold_sql": "SELECT SUM(dock_count) AS total_docks FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E49",
+      "question": "How many weather records have wind direction greater than 270 degrees?",
+      "gold_sql": "SELECT COUNT(*) AS record_count FROM weather WHERE wind_dir_degrees > 270;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E50",
+      "question": "What is the average maximum gust speed recorded in the weather table?",
+      "gold_sql": "SELECT ROUND(AVG(max_gust_speed_mph), 2) AS avg_gust FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E51",
+      "question": "List all distinct cities in the station table.",
+      "gold_sql": "SELECT DISTINCT city FROM station ORDER BY city;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E52",
+      "question": "How many trips have a duration less than 300 seconds?",
+      "gold_sql": "SELECT COUNT(*) AS short_trips FROM trip WHERE duration < 300;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E53",
+      "question": "What is the maximum mean temperature ever recorded?",
+      "gold_sql": "SELECT MAX(mean_temperature_f) AS max_mean_temp FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E54",
+      "question": "How many weather records have events containing fog?",
+      "gold_sql": "SELECT COUNT(*) AS foggy_days FROM weather WHERE events LIKE '%Fog%';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E55",
+      "question": "What is the minimum sea level pressure ever recorded?",
+      "gold_sql": "SELECT MIN(min_sea_level_pressure_inches) AS min_pressure FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E56",
+      "question": "How many trips started from station 63?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip WHERE start_station_id = 63;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E57",
+      "question": "What is the average wind direction in degrees across all weather records?",
+      "gold_sql": "SELECT ROUND(AVG(wind_dir_degrees), 2) AS avg_wind_dir FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E58",
+      "question": "What is the minimum number of bikes available ever recorded at any station?",
+      "gold_sql": "SELECT MIN(bikes_available) AS min_bikes FROM status;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E59",
+      "question": "How many weather records have a minimum temperature below 40 degrees?",
+      "gold_sql": "SELECT COUNT(*) AS cold_days FROM weather WHERE min_temperature_f < 40;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E60",
+      "question": "What is the average maximum visibility in miles?",
+      "gold_sql": "SELECT ROUND(AVG(max_visibility_miles), 2) AS avg_max_vis FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E61",
+      "question": "How many distinct start station IDs are in the trip table?",
+      "gold_sql": "SELECT COUNT(DISTINCT start_station_id) AS station_count FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E62",
+      "question": "What is the minimum maximum wind speed ever recorded?",
+      "gold_sql": "SELECT MIN(max_wind_speed_mph) AS min_max_wind FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E63",
+      "question": "How many trips have a zip code of 94041?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip WHERE zip_code = '94041';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E64",
+      "question": "What is the average latitude of all stations?",
+      "gold_sql": "SELECT ROUND(AVG(lat)::numeric, 2) AS avg_lat FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E65",
+      "question": "How many weather records have maximum humidity equal to 100?",
+      "gold_sql": "SELECT COUNT(*) AS humid_days FROM weather WHERE max_humidity = 100;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E66",
+      "question": "What is the total duration of all trips starting from station 50?",
+      "gold_sql": "SELECT SUM(duration) AS total_duration FROM trip WHERE start_station_id = 50;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E67",
+      "question": "How many distinct end station IDs are in the trip table?",
+      "gold_sql": "SELECT COUNT(DISTINCT end_station_id) AS station_count FROM trip;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E68",
+      "question": "What is the average longitude of all stations?",
+      "gold_sql": "SELECT ROUND(AVG(long)::numeric, 2) AS avg_long FROM station;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E69",
+      "question": "How many weather records were recorded for zip code 94063?",
+      "gold_sql": "SELECT COUNT(*) AS record_count FROM weather WHERE zip_code = '94063';",
+      "difficulty": "easy"
+    },
+    {
+      "id": "E70",
+      "question": "What is the minimum mean visibility in miles ever recorded?",
+      "gold_sql": "SELECT MIN(mean_visibility_miles) AS min_vis FROM weather;",
+      "difficulty": "easy"
+    },
+    {
+      "id": "M36",
+      "question": "What is the minimum and maximum dock count per city?",
+      "gold_sql": "SELECT city, MIN(dock_count) AS min_docks, MAX(dock_count) AS max_docks FROM station GROUP BY city;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M37",
+      "question": "How many trips started in each quarter of 2015?",
+      "gold_sql": "SELECT EXTRACT(QUARTER FROM start_date) AS quarter, COUNT(*) AS trip_count FROM trip WHERE EXTRACT(YEAR FROM start_date) = 2015 GROUP BY quarter ORDER BY quarter;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M38",
+      "question": "What is the average mean dew point per zip code?",
+      "gold_sql": "SELECT zip_code, ROUND(AVG(mean_dew_point_f), 2) AS avg_dew FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M39",
+      "question": "Find the top 5 most used bike IDs by trip count.",
+      "gold_sql": "SELECT bike_id, COUNT(*) AS trip_count FROM trip GROUP BY bike_id ORDER BY trip_count DESC LIMIT 5;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M40",
+      "question": "How many status records exist per station ID?",
+      "gold_sql": "SELECT station_id, COUNT(*) AS record_count FROM status GROUP BY station_id ORDER BY record_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M41",
+      "question": "What is the average maximum temperature for days with rain events?",
+      "gold_sql": "SELECT ROUND(AVG(max_temperature_f), 2) AS avg_temp FROM weather WHERE events ILIKE '%rain%';",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M42",
+      "question": "How many trips lasted between 600 and 1800 seconds?",
+      "gold_sql": "SELECT COUNT(*) AS trip_count FROM trip WHERE duration BETWEEN 600 AND 1800;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M43",
+      "question": "What is the total number of trips per subscription type for zip code 94107?",
+      "gold_sql": "SELECT subscription_type, COUNT(*) AS trip_count FROM trip WHERE zip_code = '94107' GROUP BY subscription_type;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M44",
+      "question": "Find the stations with dock count between 15 and 25.",
+      "gold_sql": "SELECT name, city, dock_count FROM station WHERE dock_count BETWEEN 15 AND 25 ORDER BY dock_count;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M45",
+      "question": "What is the average cloud cover per month?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM date) AS month, ROUND(AVG(cloud_cover), 2) AS avg_cloud FROM weather GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M46",
+      "question": "How many distinct bike IDs were used per year?",
+      "gold_sql": "SELECT EXTRACT(YEAR FROM start_date) AS year, COUNT(DISTINCT bike_id) AS bike_count FROM trip GROUP BY year ORDER BY year;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M47",
+      "question": "What is the average, minimum, and maximum trip duration per subscription type?",
+      "gold_sql": "SELECT subscription_type, ROUND(AVG(duration), 2) AS avg_duration, MIN(duration) AS min_duration, MAX(duration) AS max_duration FROM trip GROUP BY subscription_type;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M48",
+      "question": "List the zip codes with more than 100 weather records.",
+      "gold_sql": "SELECT zip_code, COUNT(*) AS record_count FROM weather GROUP BY zip_code HAVING COUNT(*) > 100 ORDER BY record_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M49",
+      "question": "What is the average mean humidity per month?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM date) AS month, ROUND(AVG(mean_humidity), 2) AS avg_humidity FROM weather GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M50",
+      "question": "How many trips ended in each month of 2015?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM end_date) AS month, COUNT(*) AS trip_count FROM trip WHERE EXTRACT(YEAR FROM end_date) = 2015 GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M51",
+      "question": "What is the average maximum wind speed per zip code?",
+      "gold_sql": "SELECT zip_code, ROUND(AVG(max_wind_speed_mph), 2) AS avg_max_wind FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M52",
+      "question": "What is the total trip duration per start station for the top 10 stations?",
+      "gold_sql": "SELECT start_station_id, SUM(duration) AS total_duration FROM trip GROUP BY start_station_id ORDER BY total_duration DESC LIMIT 10;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M53",
+      "question": "What is the average number of bikes available per station, for stations with average above 8?",
+      "gold_sql": "SELECT station_id, ROUND(AVG(bikes_available), 2) AS avg_bikes FROM status GROUP BY station_id HAVING ROUND(AVG(bikes_available), 2) > 8 ORDER BY avg_bikes DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M54",
+      "question": "How many weather records had a mean temperature between 60 and 70 degrees?",
+      "gold_sql": "SELECT COUNT(*) AS record_count FROM weather WHERE mean_temperature_f BETWEEN 60 AND 70;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M55",
+      "question": "What is the average sea level pressure per zip code?",
+      "gold_sql": "SELECT zip_code, ROUND(AVG(mean_sea_level_pressure_inches), 2) AS avg_pressure FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M56",
+      "question": "How many trips were taken per month in 2015?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM start_date) AS month, COUNT(*) AS trip_count FROM trip WHERE EXTRACT(YEAR FROM start_date) = 2015 GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M57",
+      "question": "What is the average minimum temperature per month?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM date) AS month, ROUND(AVG(min_temperature_f), 2) AS avg_min_temp FROM weather GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M58",
+      "question": "Find the top 5 end stations by total trip duration.",
+      "gold_sql": "SELECT end_station_id, SUM(duration) AS total_duration FROM trip GROUP BY end_station_id ORDER BY total_duration DESC LIMIT 5;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M59",
+      "question": "How many trips started from each station that has more than 400 trips?",
+      "gold_sql": "SELECT start_station_id, COUNT(*) AS trip_count FROM trip GROUP BY start_station_id HAVING COUNT(*) > 400 ORDER BY trip_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M60",
+      "question": "What is the average trip duration per year?",
+      "gold_sql": "SELECT EXTRACT(YEAR FROM start_date) AS year, ROUND(AVG(duration), 2) AS avg_duration FROM trip GROUP BY year ORDER BY year;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M61",
+      "question": "How many days had a minimum temperature below 45 degrees per zip code?",
+      "gold_sql": "SELECT zip_code, COUNT(*) AS cold_days FROM weather WHERE min_temperature_f < 45 GROUP BY zip_code ORDER BY cold_days DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M62",
+      "question": "What is the maximum and minimum mean humidity per zip code?",
+      "gold_sql": "SELECT zip_code, MIN(mean_humidity) AS min_humidity, MAX(mean_humidity) AS max_humidity FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M63",
+      "question": "List the bike IDs with more than 40 trips.",
+      "gold_sql": "SELECT bike_id, COUNT(*) AS trip_count FROM trip GROUP BY bike_id HAVING COUNT(*) > 40 ORDER BY trip_count DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M64",
+      "question": "How many weather records exist per month across all years?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM date) AS month, COUNT(*) AS record_count FROM weather GROUP BY month ORDER BY month;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M65",
+      "question": "What is the average dew point range per zip code?",
+      "gold_sql": "SELECT zip_code, ROUND(AVG(max_dew_point_f - min_dew_point_f), 2) AS avg_dew_range FROM weather GROUP BY zip_code;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M66",
+      "question": "How many round trips were made per start station?",
+      "gold_sql": "SELECT start_station_id, COUNT(*) AS round_trips FROM trip WHERE start_station_id = end_station_id GROUP BY start_station_id ORDER BY round_trips DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M67",
+      "question": "What is the average trip duration for trips longer than one hour?",
+      "gold_sql": "SELECT ROUND(AVG(duration), 2) AS avg_duration FROM trip WHERE duration > 3600;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M68",
+      "question": "List the top 5 stations by number of status records.",
+      "gold_sql": "SELECT station_id, COUNT(*) AS record_count FROM status GROUP BY station_id ORDER BY record_count DESC LIMIT 5;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M69",
+      "question": "What is the average maximum temperature for each day of the week?",
+      "gold_sql": "SELECT EXTRACT(DOW FROM date) AS day_of_week, ROUND(AVG(max_temperature_f), 2) AS avg_max_temp FROM weather GROUP BY day_of_week ORDER BY day_of_week;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "M70",
+      "question": "How many trips per zip code have a duration greater than 1800 seconds?",
+      "gold_sql": "SELECT zip_code, COUNT(*) AS long_trips FROM trip WHERE duration > 1800 GROUP BY zip_code ORDER BY long_trips DESC;",
+      "difficulty": "medium"
+    },
+    {
+      "id": "H31",
+      "question": "What is the average trip duration from each city to San Francisco?",
+      "gold_sql": "SELECT s1.city AS start_city, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id WHERE s2.city = 'San Francisco' GROUP BY s1.city ORDER BY avg_duration DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H32",
+      "question": "Which stations have more subscriber trips than customer trips?",
+      "gold_sql": "SELECT s.name, COUNT(CASE WHEN t.subscription_type = 'Subscriber' THEN 1 END) AS subscriber_count, COUNT(CASE WHEN t.subscription_type = 'Customer' THEN 1 END) AS customer_count FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.name HAVING COUNT(CASE WHEN t.subscription_type = 'Subscriber' THEN 1 END) > COUNT(CASE WHEN t.subscription_type = 'Customer' THEN 1 END) ORDER BY subscriber_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H33",
+      "question": "Find the top 5 station pairs with the most trips between them.",
+      "gold_sql": "SELECT s1.name AS start_station, s2.name AS end_station, COUNT(t.id) AS trip_count FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id GROUP BY s1.name, s2.name ORDER BY trip_count DESC LIMIT 5;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H34",
+      "question": "What is the average trip duration when it was foggy versus clear weather?",
+      "gold_sql": "SELECT CASE WHEN w.events LIKE '%Fog%' THEN 'Foggy' ELSE 'Clear' END AS weather_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY weather_type;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H35",
+      "question": "For each city, what percentage of all trips start from that city?",
+      "gold_sql": "SELECT s.city, ROUND(COUNT(t.id) * 100.0 / (SELECT COUNT(*) FROM trip), 2) AS trip_percentage FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.city ORDER BY trip_percentage DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H36",
+      "question": "What is the average trip duration for trips starting from stations with more than 20 docks?",
+      "gold_sql": "SELECT ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id WHERE s.dock_count > 20;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H37",
+      "question": "Which cities had trips on days with temperatures above 85 degrees?",
+      "gold_sql": "SELECT DISTINCT s.city FROM trip t JOIN station s ON t.start_station_id = s.id JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.max_temperature_f > 85;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H38",
+      "question": "What is the total number of trips per city pair, including only pairs with more than 100 trips?",
+      "gold_sql": "SELECT s1.city AS start_city, s2.city AS end_city, COUNT(t.id) AS trip_count FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id GROUP BY s1.city, s2.city HAVING COUNT(t.id) > 100 ORDER BY trip_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H39",
+      "question": "For each station, what is the dock utilization rate (average bikes available divided by dock count)?",
+      "gold_sql": "SELECT s.name, s.dock_count, ROUND(AVG(st.bikes_available), 2) AS avg_bikes, ROUND(ROUND(AVG(st.bikes_available), 2) * 100.0 / s.dock_count, 2) AS utilization_pct FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.name, s.dock_count ORDER BY utilization_pct DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H40",
+      "question": "Which start station had the most trips on rainy days?",
+      "gold_sql": "SELECT s.name, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.start_station_id = s.id JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.events ILIKE '%rain%' GROUP BY s.name ORDER BY trip_count DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H41",
+      "question": "What is the average trip duration per month for inter-city trips?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM t.start_date) AS month, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id WHERE s1.city != s2.city GROUP BY month ORDER BY month;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H42",
+      "question": "Find the stations that have never been used as a trip start station.",
+      "gold_sql": "SELECT s.id, s.name, s.city FROM station s WHERE NOT EXISTS (SELECT 1 FROM trip t WHERE t.start_station_id = s.id);",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H43",
+      "question": "What is the average daily trip count for each city?",
+      "gold_sql": "SELECT s.city, ROUND(COUNT(t.id) * 1.0 / COUNT(DISTINCT CAST(t.start_date AS DATE)), 2) AS avg_daily_trips FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.city ORDER BY avg_daily_trips DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H44",
+      "question": "Find the top 3 cities by average trip duration for subscriber trips only.",
+      "gold_sql": "SELECT s.city, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id WHERE t.subscription_type = 'Subscriber' GROUP BY s.city ORDER BY avg_duration DESC LIMIT 3;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H45",
+      "question": "What is the total number of round trips per city?",
+      "gold_sql": "SELECT s.city, COUNT(t.id) AS round_trips FROM trip t JOIN station s ON t.start_station_id = s.id WHERE t.start_station_id = t.end_station_id GROUP BY s.city ORDER BY round_trips DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H46",
+      "question": "Which station had the highest ratio of customer to subscriber trips?",
+      "gold_sql": "SELECT s.name, ROUND(COUNT(CASE WHEN t.subscription_type = 'Customer' THEN 1 END) * 1.0 / NULLIF(COUNT(CASE WHEN t.subscription_type = 'Subscriber' THEN 1 END), 0), 2) AS customer_ratio FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.name ORDER BY customer_ratio DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H47",
+      "question": "Find the average trip duration for each start-end city pair.",
+      "gold_sql": "SELECT s1.city AS start_city, s2.city AS end_city, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id GROUP BY s1.city, s2.city ORDER BY avg_duration DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H48",
+      "question": "How many trips occurred on days with maximum wind speed above 30 mph?",
+      "gold_sql": "SELECT COUNT(t.id) AS trip_count FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.max_wind_speed_mph > 30;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H49",
+      "question": "Which station pair has the longest average trip duration?",
+      "gold_sql": "SELECT s1.name AS start_station, s2.name AS end_station, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id GROUP BY s1.name, s2.name ORDER BY avg_duration DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H50",
+      "question": "For each weather event type, how many distinct stations had trips start on days with that event?",
+      "gold_sql": "SELECT w.events, COUNT(DISTINCT t.start_station_id) AS station_count FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.events IS NOT NULL AND w.events != '' GROUP BY w.events ORDER BY station_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H51",
+      "question": "What is the monthly trend of trip count and average duration for San Francisco stations?",
+      "gold_sql": "SELECT EXTRACT(MONTH FROM t.start_date) AS month, COUNT(t.id) AS trip_count, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id WHERE s.city = 'San Francisco' GROUP BY month ORDER BY month;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H52",
+      "question": "What is the average temperature on the top 10 busiest trip days in zip code 94107?",
+      "gold_sql": "SELECT w.date, w.mean_temperature_f, sub.trip_count FROM weather w JOIN (SELECT CAST(t.start_date AS DATE) AS trip_date, COUNT(*) AS trip_count FROM trip t WHERE t.zip_code = '94107' GROUP BY trip_date ORDER BY trip_count DESC LIMIT 10) sub ON w.date = sub.trip_date AND w.zip_code = '94107' ORDER BY sub.trip_count DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H53",
+      "question": "For each station, calculate the average bikes available on weekdays versus weekends.",
+      "gold_sql": "SELECT s.name, ROUND(AVG(CASE WHEN EXTRACT(DOW FROM st.time::TIMESTAMP) IN (0, 6) THEN st.bikes_available END), 2) AS weekend_avg, ROUND(AVG(CASE WHEN EXTRACT(DOW FROM st.time::TIMESTAMP) NOT IN (0, 6) THEN st.bikes_available END), 2) AS weekday_avg FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.name ORDER BY s.name;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H54",
+      "question": "What is the total number of subscriber trips from Mountain View to San Francisco?",
+      "gold_sql": "SELECT COUNT(t.id) AS trip_count FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id WHERE s1.city = 'Mountain View' AND s2.city = 'San Francisco' AND t.subscription_type = 'Subscriber';",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H55",
+      "question": "Find the top 3 stations with the highest dock utilization rate.",
+      "gold_sql": "SELECT s.name, s.dock_count, ROUND(AVG(st.bikes_available), 2) AS avg_bikes, ROUND(AVG(st.bikes_available), 2) * 100.0 / s.dock_count AS utilization_pct FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.name, s.dock_count ORDER BY utilization_pct DESC LIMIT 3;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H56",
+      "question": "What is the average trip duration by temperature category: cold below 55, mild 55 to 75, and hot above 75?",
+      "gold_sql": "SELECT CASE WHEN w.mean_temperature_f < 55 THEN 'Cold (< 55F)' WHEN w.mean_temperature_f BETWEEN 55 AND 75 THEN 'Mild (55-75F)' ELSE 'Hot (> 75F)' END AS temp_category, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY temp_category ORDER BY avg_duration;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H57",
+      "question": "Which city pair had the most subscriber trips?",
+      "gold_sql": "SELECT s1.city AS start_city, s2.city AS end_city, COUNT(t.id) AS trip_count FROM trip t JOIN station s1 ON t.start_station_id = s1.id JOIN station s2 ON t.end_station_id = s2.id WHERE t.subscription_type = 'Subscriber' GROUP BY s1.city, s2.city ORDER BY trip_count DESC LIMIT 1;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H58",
+      "question": "What is the average trip count per station for each city?",
+      "gold_sql": "SELECT s.city, ROUND(COUNT(t.id) * 1.0 / COUNT(DISTINCT s.id), 2) AS avg_trips_per_station FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.city ORDER BY avg_trips_per_station DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H59",
+      "question": "Find stations where the average bikes available exceeds the average docks available.",
+      "gold_sql": "SELECT s.name, ROUND(AVG(st.bikes_available), 2) AS avg_bikes, ROUND(AVG(st.docks_available), 2) AS avg_docks FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.name HAVING ROUND(AVG(st.bikes_available), 2) > ROUND(AVG(st.docks_available), 2) ORDER BY avg_bikes DESC;",
+      "difficulty": "hard"
+    },
+    {
+      "id": "H60",
+      "question": "What is the average trip duration for each hour of the day for trips starting in San Francisco?",
+      "gold_sql": "SELECT EXTRACT(HOUR FROM t.start_date::TIMESTAMP) AS hour, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id WHERE s.city = 'San Francisco' GROUP BY hour ORDER BY hour;",
+      "difficulty": "hard"
+    }
+  ]
+}

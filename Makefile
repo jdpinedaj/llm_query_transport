@@ -10,7 +10,7 @@ NC = \033[0m
 
 SCHEMA_SQL = data/spider_data/database/bike_1/schema_postgres.sql
 
-.PHONY: help run_app kill_app clean fix_ruff setup_db teardown_db
+.PHONY: help run_app kill_app clean fix_ruff setup_db teardown_db evaluate
 
 help:
 	@echo "$(BLUE)LLM Query Transport - Makefile$(NC)"
@@ -25,6 +25,9 @@ help:
 	@echo "  $(YELLOW)setup_db$(NC)     - Create PostgreSQL database and load schema"
 	@echo "  $(YELLOW)teardown_db$(NC)  - Drop the PostgreSQL database"
 	@echo ""
+	@echo "$(YELLOW)Evaluation:$(NC)"
+	@echo "  $(YELLOW)evaluate$(NC)     - Run text-to-SQL evaluation metrics"
+	@echo ""
 	@echo "$(YELLOW)Code Quality:$(NC)"
 	@echo "  $(YELLOW)fix_ruff$(NC)     - Auto-fix all ruff linting errors"
 	@echo "  $(YELLOW)clean$(NC)        - Clean up temporary files and caches"
@@ -33,7 +36,12 @@ help:
 	@echo "  make run_app"
 	@echo "  make kill_app"
 	@echo "  make fix_ruff"
+	@echo "  make evaluate"
 	@echo "  make clean"
+
+evaluate: setup_db  ## Run text-to-SQL evaluation metrics
+	@printf "$(BLUE)Running evaluation metrics...$(NC)\n"
+	uv run python -m src.evaluation.runner
 
 setup_db:
 	@printf "$(BLUE)Setting up PostgreSQL database...$(NC)\n"

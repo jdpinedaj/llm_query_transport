@@ -52,6 +52,12 @@ src/
 │   ├── session_adapters.py          # Session state implementations
 │   └── config_adapters.py           # Configuration providers
 │
+├── evaluation/                      # Pipeline evaluation
+│   ├── metrics.py                   # EX, VER, latency, component matching
+│   ├── harness.py                   # Test case runner
+│   ├── visualization.py            # Publication-ready figures (PNG + SVG)
+│   └── runner.py                    # CLI entry point (make evaluate)
+│
 └── config/
     ├── settings.py                  # Central configuration loader
     ├── app_config.yml               # Application parameters
@@ -116,6 +122,7 @@ Create a `.env` file in the project root:
 ```env
 # OpenAI
 OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-5.2-2025-12-11
 
 # PostgreSQL connection
 DB_HOST=localhost
@@ -167,6 +174,7 @@ This command:
 |---------|-------------|
 | `make run_app` | Setup database (if needed) and start the Streamlit application |
 | `make kill_app` | Drop the database and stop all Streamlit processes |
+| `make evaluate` | Run text-to-SQL evaluation metrics (EX, VER, latency, component matching) |
 | `make setup_db` | Create the PostgreSQL database and load schema only |
 | `make teardown_db` | Drop the PostgreSQL database only |
 | `make fix_ruff` | Auto-fix linting errors and format code |
@@ -205,11 +213,16 @@ All application parameters are centralized in `src/config/app_config.yml`. Envir
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `model_to_use` | LLM provider | `openai` |
-| `openai_model_generation_refinement` | Model for SQL generation | `gpt-4o` |
+| `openai_model_generation_refinement` | Model for SQL generation (overridden by `OPENAI_MODEL` env var) | `gpt-5.2-2025-12-11` |
 | `openai_model_transformation` | Model for NL transformation | `gpt-4-turbo` |
 | `openai_embedding_model` | Model for embeddings | `text-embedding-3-large` |
-| `temperature_generation_refinement` | Temperature for SQL generation | `0.1` |
-| `temperature_transformation` | Temperature for NL transformation | `0.4` |
+| `reasoning_effort_generation` | Reasoning effort for GPT-5.x SQL generation | `low` |
+| `reasoning_effort_transformation` | Reasoning effort for GPT-5.x NL transformation | `low` |
+| `max_completion_tokens` | Max completion tokens for GPT-5.x models | `16384` |
+| `temperature_generation_refinement` | Temperature for non-GPT-5 SQL generation | `0.1` |
+| `temperature_transformation` | Temperature for non-GPT-5 NL transformation | `0.4` |
+
+> **Note:** GPT-5.x reasoning models use `reasoning_effort` instead of `temperature`/`top_p`. The system auto-detects the model family and applies the correct parameters.
 
 ### Database
 
@@ -266,10 +279,51 @@ Controlled via environment variables: `LOG_LEVEL` (default `INFO`), `ENVIRONMENT
 
 <hr>
 
+## Evaluation Metrics
+
+The pipeline is evaluated using state-of-the-art text-to-SQL metrics via `src/evaluation/`.
+
+### Test Set
+
+100 question/gold-SQL pairs (distinct from the 8 few-shot examples), organized by difficulty:
+
+| Difficulty | Count | Description |
+|------------|-------|-------------|
+| Easy | 35 | Single table queries: COUNT, MIN, MAX, DISTINCT, simple WHERE |
+| Medium | 35 | GROUP BY, ORDER BY, LIMIT, HAVING, date extraction, VARCHAR filters |
+| Hard | 30 | Multi-table JOINs with aggregation, CASE, subqueries, city-pair analysis |
+
+### Metrics
+
+| Metric | Description |
+|--------|-------------|
+| **Execution Accuracy (EX)** | Percentage of generated queries that return the same result set as the gold SQL |
+| **Valid Execution Rate (VER)** | Percentage of generated queries that execute without errors |
+| **Latency** | Response time per pipeline stage (SQL generation, execution, NL transformation) — mean, median, p95 |
+| **Component Matching** | Precision, Recall, and F1 per SQL clause (SELECT, WHERE, GROUP BY, ORDER BY, JOIN, aggregation) |
+
+### Baseline Comparison
+
+Two prompting modes are compared using the same test set:
+
+- **Few-Shot + FAISS** — Retrieves the k most semantically similar examples via FAISS and includes them in the prompt
+- **Simple Prompting** — Uses only the table schema and question, with no examples
+
+### Running the Evaluation
+
+```bash
+make evaluate
+```
+
+This runs both prompting modes (Few-Shot + FAISS and Simple Prompting), prints all metrics to the console, and saves output to `results/evaluation/`:
+- Figures: `execution_accuracy.png/.svg`, `latency_distribution.png/.svg`, `component_matching_heatmap.png/.svg`, `overall_comparison.png/.svg`
+- Raw results: `evaluation_results.json`
+<hr>
+
 ## Tech Stack
 
 - **LLM Framework**: LangChain 0.2.x
-- **LLM Provider**: OpenAI (GPT-4o, GPT-4-turbo)
+- **LLM Provider**: OpenAI (GPT-5.2 for SQL generation, GPT-4-turbo for NL transformation)
 - **Embeddings**: OpenAI text-embedding-3-large + FAISS
 - **Database**: PostgreSQL + SQLAlchemy
 - **Frontend**: Streamlit
