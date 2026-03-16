@@ -20,7 +20,9 @@ LLM Query Transport is a natural language to SQL conversion tool for bike-sharin
 - **Query Refinement** — Optional iterative refinement process for more accurate SQL generation
 - **Safe Execution** — Only allows SELECT/WITH statements; blocks all DML/DDL operations
 - **Natural Language Results** — Transforms raw query results back into human-readable answers
-- **Chat History** — Maintains conversation context for follow-up questions
+- **Chat History with Memory Window** — Maintains conversation context with a configurable sliding window to control token usage
+- **CSV Download** — Export query results as downloadable CSV files
+- **Structured Logging** — Colored, structured logs via structlog with callsite info
 
 <hr>
 
@@ -43,7 +45,7 @@ src/
 │   ├── llm/
 │   │   ├── sql_query_generator.py   # SQL generation with Few-Shot prompting
 │   │   ├── natural_language_transformer.py  # Results → natural language
-│   │   └── chat_history_collector.py        # Structured chat history
+│   │   └── chat_history_collector.py        # Memory window chat history
 │   ├── ui/
 │   │   ├── streamlit_orchestrator.py  # Streamlit wrapper with @st.fragment()
 │   │   └── streamlit_helpers.py       # UI utilities
@@ -196,7 +198,9 @@ The project uses a **bike-sharing dataset** (Bike 1) with 4 tables:
 
 ## Configuration
 
-Application parameters are defined in `src/config/app_config.yml`:
+All application parameters are centralized in `src/config/app_config.yml`. Environment variables (`.env`) override database defaults.
+
+### Models
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
@@ -204,8 +208,61 @@ Application parameters are defined in `src/config/app_config.yml`:
 | `openai_model_generation_refinement` | Model for SQL generation | `gpt-4o` |
 | `openai_model_transformation` | Model for NL transformation | `gpt-4-turbo` |
 | `openai_embedding_model` | Model for embeddings | `text-embedding-3-large` |
-| `use_examples_vector_database` | Enable few-shot with FAISS | `true` |
+| `temperature_generation_refinement` | Temperature for SQL generation | `0.1` |
+| `temperature_transformation` | Temperature for NL transformation | `0.4` |
+
+### Database
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `database.host` | PostgreSQL host (overridden by `DB_HOST` env var) | `localhost` |
+| `database.port` | PostgreSQL port (overridden by `DB_PORT` env var) | `5432` |
+| `database.name` | Database name (overridden by `DB_NAME` env var) | `bike_1` |
+
+### Query Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `decimal_places` | Decimal precision for numeric results | `4` |
+| `sample_size` | Max rows sampled for NL transformation | `50` |
+| `few_shot_k` | Number of few-shot examples retrieved via FAISS | `5` |
+| `top_k` | Top K parameter for SQL generation chain | `1` |
+| `memory_window_size` | Number of recent interactions kept in context | `5` |
+
+### UI
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `page_title` | Browser tab title | `LLM Query Transport` |
+| `logo_width` | Logo image width (px) | `180` |
+| `container_height` | Height of info and history panels (px) | `700` |
+| `input_height` | Text input area height (px) | `150` |
+| `default_query` | Pre-filled query example | `Get the average duration...` |
+| `welcome_message` | Initial assistant greeting | `Hello! Ask me any question...` |
+| `csv_filename_prefix` | Prefix for downloaded CSV files | `query_results` |
+
+### Developer
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
 | `include_refinement_process` | Enable SQL refinement step | `false` |
+| `show_developer_comments` | Show internal queries in chat | `false` |
+| `show_refined_query` | Show refined SQL in chat | `false` |
+| `use_examples_vector_database` | Enable few-shot with FAISS | `true` |
+| `analysis_langsmith` | Enable LangSmith tracing | `true` |
+
+### Structured Logging
+
+Logs use **structlog** with colored output in local environments:
+
+```
+[INFO] [chat_history_collector.py] [line:48] Memory stored
+[INFO] [chat_history_collector.py] [line:77] Memory window applied  total_messages=8  window_size=5  discarded=3
+[INFO] [sql_query_generator.py] [line:79] Generating SQL query for: How many trips...
+```
+
+Controlled via environment variables: `LOG_LEVEL` (default `INFO`), `ENVIRONMENT` (default `LOCAL`).
+
 
 <hr>
 
@@ -217,5 +274,6 @@ Application parameters are defined in `src/config/app_config.yml`:
 - **Database**: PostgreSQL + SQLAlchemy
 - **Frontend**: Streamlit
 - **Package Manager**: uv
+- **Logging**: structlog (colored, structured)
 - **Linter/Formatter**: Ruff
 - **Data Validation**: Pydantic v2

@@ -240,6 +240,7 @@ class LoadConfig:
         self.sample_size: int = qp.get("sample_size", 50)
         self.few_shot_k: int = qp.get("few_shot_k", 5)
         self.top_k: int = qp.get("top_k", 1)
+        self.memory_window_size: int = qp.get("memory_window_size", 5)
 
     def _load_ui_config(self, config: dict[str, Any]) -> None:
         ui = config.get("ui", {})

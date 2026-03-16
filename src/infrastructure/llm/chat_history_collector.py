@@ -15,8 +15,9 @@ from src.domain.schemas import ChatHistoryEntry
 class ChatHistoryCollector:
     """Aggregates pipeline data into structured chat history entries."""
 
-    def __init__(self, session: SessionManager):
+    def __init__(self, session: SessionManager, memory_window_size: int = 5):
         self.session = session
+        self.memory_window_size = memory_window_size
 
     def collect(
         self,
@@ -44,11 +45,22 @@ class ChatHistoryCollector:
         history.append(entry.model_dump())
         self.session.set("structured_history", history)
 
-        logger.debug(f"Collected chat history entry for query: {user_query[:50]}...")
+        logger.info(
+            "Memory stored",
+            query=user_query[:80],
+            has_sql=bool(initial_sql),
+            result_rows=result_rows,
+            has_error=bool(error),
+            total_entries=len(history),
+        )
         return entry
 
     def compile_relevant_history(self) -> str:
-        """Compile relevant parts of the chat history for context."""
+        """Compile the last N relevant interactions from chat history.
+
+        Uses memory_window_size to limit how many interactions are sent
+        as context to the LLM, preventing unbounded token growth.
+        """
         chat_history = self.session.get("chat_history", [])
         relevant_types = {
             "user_query": "User Request",
@@ -64,4 +76,24 @@ class ChatHistoryCollector:
                 subtitle = relevant_types[msg_type]
                 relevant_messages.append(f"### {subtitle}\n\n{msg['content']}\n")
 
-        return "\n".join(relevant_messages)
+        total_relevant = len(relevant_messages)
+
+        # Keep only the last N messages based on memory_window_size
+        if self.memory_window_size > 0 and total_relevant > self.memory_window_size:
+            relevant_messages = relevant_messages[-self.memory_window_size :]
+            logger.info(
+                "Memory window applied",
+                total_messages=total_relevant,
+                window_size=self.memory_window_size,
+                discarded=total_relevant - self.memory_window_size,
+            )
+        else:
+            logger.info(
+                "Memory retrieved",
+                total_messages=total_relevant,
+                window_size=self.memory_window_size,
+            )
+
+        compiled = "\n".join(relevant_messages)
+        logger.debug("Memory context compiled", context_length=len(compiled))
+        return compiled

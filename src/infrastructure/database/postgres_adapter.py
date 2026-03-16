@@ -40,10 +40,7 @@ class PostgreSQLAdapter:
 
     def _round_row(self, row: tuple) -> tuple:
         """Round float and Decimal values in a row to configured decimal places."""
-        return tuple(
-            round(v, self.decimal_places) if isinstance(v, (float, Decimal)) else v
-            for v in row
-        )
+        return tuple(round(v, self.decimal_places) if isinstance(v, (float, Decimal)) else v for v in row)
 
     def execute_query(self, query: str) -> tuple[list[tuple[Any, ...]], list[str]]:
         """Execute a SQL query with safety checks.

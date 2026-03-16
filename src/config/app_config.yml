@@ -23,6 +23,7 @@ query_parameters:
   sample_size: 50
   few_shot_k: 5
   top_k: 1
+  memory_window_size: 5
 
 ui:
   page_title: "LLM Query Transport"

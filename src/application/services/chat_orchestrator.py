@@ -35,7 +35,7 @@ class ChatOrchestrator:
         self.ui = ui_notifier
         self.config = config
         self.db_adapter = PostgreSQLAdapter(database_uri, decimal_places=config.decimal_places)
-        self.history_collector = ChatHistoryCollector(session)
+        self.history_collector = ChatHistoryCollector(session, memory_window_size=config.memory_window_size)
 
     def _manage_messages(
         self,
