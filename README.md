@@ -285,13 +285,13 @@ The pipeline is evaluated using state-of-the-art text-to-SQL metrics via `src/ev
 
 ### Test Set
 
-100 question/gold-SQL pairs (distinct from the 8 few-shot examples), organized by difficulty:
+200 question/gold-SQL pairs (distinct from the 15 few-shot examples), organized by difficulty:
 
 | Difficulty | Count | Description |
 |------------|-------|-------------|
-| Easy | 35 | Single table queries: COUNT, MIN, MAX, DISTINCT, simple WHERE |
-| Medium | 35 | GROUP BY, ORDER BY, LIMIT, HAVING, date extraction, VARCHAR filters |
-| Hard | 30 | Multi-table JOINs with aggregation, CASE, subqueries, city-pair analysis |
+| Easy | 70 | Single table queries: COUNT, MIN, MAX, DISTINCT, simple WHERE |
+| Medium | 70 | GROUP BY, ORDER BY, LIMIT, HAVING, date extraction, VARCHAR filters |
+| Hard | 60 | Multi-table JOINs with aggregation, CASE, subqueries, city-pair analysis |
 
 ### Metrics
 
@@ -307,7 +307,7 @@ The pipeline is evaluated using state-of-the-art text-to-SQL metrics via `src/ev
 Two prompting modes are compared using the same test set:
 
 - **Few-Shot + FAISS** — Retrieves the k most semantically similar examples via FAISS and includes them in the prompt
-- **Simple Prompting** — Uses only the table schema and question, with no examples
+- **Simple Prompting** — Uses only the table schema and question, with no examples or domain context
 
 ### Running the Evaluation
 

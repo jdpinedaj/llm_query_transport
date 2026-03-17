@@ -41,15 +41,7 @@ simple_sql_generation:
 
     Question: {input}
     SQLQuery:
-
-    Additional context:
-    {additional_context}
-
-    Chat history:
-    {chat_history_combined}
   input_variables:
     - input
     - top_k
     - table_info
-    - additional_context
-    - chat_history_combined

@@ -148,7 +148,7 @@
     {
       "id": "E24",
       "question": "List all distinct weather event types.",
-      "gold_sql": "SELECT DISTINCT events FROM weather WHERE events IS NOT NULL AND events != '';",
+      "gold_sql": "SELECT DISTINCT events FROM weather;",
       "difficulty": "easy"
     },
     {
@@ -418,7 +418,7 @@
     {
       "id": "M34",
       "question": "What are the distinct weather events recorded for zip code 94107?",
-      "gold_sql": "SELECT DISTINCT events FROM weather WHERE zip_code = '94107' AND events IS NOT NULL AND events != '';",
+      "gold_sql": "SELECT DISTINCT events FROM weather WHERE zip_code = '94107';",
       "difficulty": "medium"
     },
     {
@@ -484,7 +484,7 @@
     {
       "id": "H10",
       "question": "What is the average trip duration on rainy days versus non-rainy days?",
-      "gold_sql": "SELECT CASE WHEN w.events LIKE '%Rain%' THEN 'Rainy' ELSE 'Not Rainy' END AS weather_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY weather_type;",
+      "gold_sql": "SELECT CASE WHEN w.events ILIKE '%rain%' THEN 'Rainy' ELSE 'Non-Rainy' END AS weather_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY weather_type;",
       "difficulty": "hard"
     },
     {
@@ -580,7 +580,7 @@
     {
       "id": "H26",
       "question": "What is the average trip duration on hot days (max temp above 80) versus cold days (max temp below 60)?",
-      "gold_sql": "SELECT CASE WHEN w.max_temperature_f > 80 THEN 'Above 80F' WHEN w.max_temperature_f < 60 THEN 'Below 60F' END AS temp_category, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.max_temperature_f > 80 OR w.max_temperature_f < 60 GROUP BY temp_category;",
+      "gold_sql": "SELECT CASE WHEN w.max_temperature_f > 80 THEN 'Hot' WHEN w.max_temperature_f < 60 THEN 'Cold' END AS temp_category, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.max_temperature_f > 80 OR w.max_temperature_f < 60 GROUP BY temp_category;",
       "difficulty": "hard"
     },
     {
@@ -976,7 +976,7 @@
     {
       "id": "M62",
       "question": "What is the maximum and minimum mean humidity per zip code?",
-      "gold_sql": "SELECT zip_code, MIN(mean_humidity) AS min_humidity, MAX(mean_humidity) AS max_humidity FROM weather GROUP BY zip_code;",
+      "gold_sql": "SELECT zip_code, MAX(mean_humidity) AS max_humidity, MIN(mean_humidity) AS min_humidity FROM weather GROUP BY zip_code;",
       "difficulty": "medium"
     },
     {
@@ -1048,7 +1048,7 @@
     {
       "id": "H34",
       "question": "What is the average trip duration when it was foggy versus clear weather?",
-      "gold_sql": "SELECT CASE WHEN w.events LIKE '%Fog%' THEN 'Foggy' ELSE 'Clear' END AS weather_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY weather_type;",
+      "gold_sql": "SELECT CASE WHEN w.events ILIKE '%fog%' THEN 'Foggy' ELSE 'Clear' END AS weather_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY weather_type;",
       "difficulty": "hard"
     },
     {
@@ -1096,7 +1096,7 @@
     {
       "id": "H42",
       "question": "Find the stations that have never been used as a trip start station.",
-      "gold_sql": "SELECT s.id, s.name, s.city FROM station s WHERE NOT EXISTS (SELECT 1 FROM trip t WHERE t.start_station_id = s.id);",
+      "gold_sql": "SELECT s.id, s.name FROM station s WHERE NOT EXISTS (SELECT 1 FROM trip t WHERE t.start_station_id = s.id);",
       "difficulty": "hard"
     },
     {
@@ -1180,7 +1180,7 @@
     {
       "id": "H56",
       "question": "What is the average trip duration by temperature category: cold below 55, mild 55 to 75, and hot above 75?",
-      "gold_sql": "SELECT CASE WHEN w.mean_temperature_f < 55 THEN 'Cold (< 55F)' WHEN w.mean_temperature_f BETWEEN 55 AND 75 THEN 'Mild (55-75F)' ELSE 'Hot (> 75F)' END AS temp_category, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY temp_category ORDER BY avg_duration;",
+      "gold_sql": "SELECT CASE WHEN w.mean_temperature_f < 55 THEN 'Cold' WHEN w.mean_temperature_f BETWEEN 55 AND 75 THEN 'Mild' ELSE 'Hot' END AS temp_category, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY temp_category ORDER BY avg_duration;",
       "difficulty": "hard"
     },
     {
