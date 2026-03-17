@@ -75,6 +75,7 @@ dev = [
 # Default ruff configuration
 [tool.ruff]
 line-length = 140
+extend-include = ["*.ipynb"]
 extend-exclude = [".venv", "libs", "out", ".git", ".mypy_cache", ".tox", "venv", "_build", "buck-out", "build", "dist"]
 
 [tool.ruff.lint]
@@ -103,3 +104,4 @@ ignore-overlong-task-comments = true
 "tests/*" = ["S101", "ANN201"]
 "experiments/*" = ["T201"]
 "src/config/settings.py" = ["E402"]
+"notebooks/*" = ["E402", "S101", "ANN201", "N816", "F811"]

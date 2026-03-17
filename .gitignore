@@ -49,9 +49,13 @@ Thumbs.db
 *.mov
 *.wmv
 
-# notebooks
-.ipynb_checkpoints/
-notebooks/*
+# evaluation results
+results/
+
+# data
+data/*
+!data/.gitkeep
+!data/evaluation/
 
 # Cache
 .cache/
@@ -64,10 +68,6 @@ __pycache__/
 env/
 venv/
 .streamlit/
-
-# data
-data/*
-!data/.gitkeep
 
 # docs
 docs/
