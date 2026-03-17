@@ -12,27 +12,29 @@ table_info: |
     Columns: date (DATE), max_temperature_f (INTEGER), mean_temperature_f (INTEGER), min_temperature_f (INTEGER), max_dew_point_f (INTEGER), mean_dew_point_f (INTEGER), min_dew_point_f (INTEGER), max_humidity (INTEGER), mean_humidity (INTEGER), min_humidity (INTEGER), max_sea_level_pressure_inches (NUMERIC), mean_sea_level_pressure_inches (NUMERIC), min_sea_level_pressure_inches (NUMERIC), max_visibility_miles (INTEGER), mean_visibility_miles (INTEGER), min_visibility_miles (INTEGER), max_wind_speed_mph (INTEGER), mean_wind_speed_mph (INTEGER), max_gust_speed_mph (INTEGER), precipitation_inches (VARCHAR), cloud_cover (INTEGER), events (VARCHAR), wind_dir_degrees (INTEGER), zip_code (VARCHAR)
 
 additional_context: |
-  - Use the `station` table to get information about stations, including their name, latitude, longitude, dock count, city, and installation date.
+  - Use the `station` table to get information about stations, including their name, latitude, longitude, dock count, city, and installation date. Cities: San Francisco, San Jose, Mountain View, Palo Alto, Redwood City.
   - Use the `status` table to get real-time information about bike availability, docks availability, and the timestamp. Use `station_id` to join this table with the `station` table.
-  - Use the `trip` table for trip details such as duration, start and end station IDs, bike IDs, subscription types, and zip codes.
-  - Use the `weather` table to get weather details, including temperatures, humidity, wind speed, and precipitation. Use the `date` and `zip_code` columns for filtering and joining with other tables.
+  - Use the `trip` table for trip details such as duration (in seconds), start and end station IDs, bike IDs, subscription types ('Subscriber' or 'Customer'), and zip codes. Trip data covers 2015. IMPORTANT: The trip table does NOT have station name columns — to get station names, you must JOIN with the `station` table.
+  - Use the `weather` table to get weather details, including temperatures, humidity, wind speed, and precipitation. Use the `date` and `zip_code` columns for filtering and joining with other tables. The `events` column contains values like 'Rain', 'Fog', 'Fog-Rain', 'Rain-Thunderstorm', or empty string for clear days. Use ILIKE for case-insensitive matching on the events column (e.g., WHERE events ILIKE '%rain%').
   - For joins between tables:
     - Join `station` and `status` tables using `station.id = status.station_id`.
     - Join `trip` and `station` tables using `trip.start_station_id = station.id` or `trip.end_station_id = station.id`.
     - Join `trip` and `weather` tables using `trip.zip_code = weather.zip_code` and `CAST(trip.start_date AS DATE) = weather.date`.
-  - Use aggregate functions like COUNT(), AVG(), or SUM() where appropriate.
-  - Use PostgreSQL date/time functions for filtering or grouping data by date or time. Use EXTRACT(YEAR FROM column), EXTRACT(MONTH FROM column), EXTRACT(DAY FROM column) to extract date parts. Use TO_CHAR(column, 'format') for date formatting. Use DATE_TRUNC('day', column) to truncate timestamps to dates.
+  - Use aggregate functions like COUNT(), AVG(), or SUM() where appropriate. Always wrap AVG() and decimal calculations with ROUND(expression, 2) for clean output. For ROUND with double precision columns (lat, long), cast first: ROUND(AVG(lat)::numeric, 2).
+  - Use PostgreSQL date/time functions for filtering or grouping data by date or time. Use EXTRACT(YEAR FROM column), EXTRACT(MONTH FROM column), EXTRACT(DOW FROM column) to extract date parts. Use EXTRACT(HOUR FROM column::TIMESTAMP) for hour extraction. Prefer EXTRACT() over DATE_TRUNC() for grouping by month/year.
   - Since dates are stored as proper DATE and TIMESTAMP types, you can use direct comparisons like `column >= '2015-08-21'` and `column < '2015-09-01'` without any substring manipulation.
+  - For "round trips", use WHERE start_station_id = end_station_id.
+  - For "inter-city trips", join trip with station twice (start and end) and filter WHERE start_city != end_city.
 
 examples:
   - input: "What is the total number of trips starting from station ID 63 on '8/21/2015'?"
     query: "SELECT COUNT(*) AS trip_count FROM trip WHERE start_station_id = 63 AND CAST(start_date AS DATE) = '2015-08-21';"
   - input: "Get the average duration of trips grouped by subscription type."
-    query: "SELECT subscription_type, AVG(duration) AS average_duration FROM trip GROUP BY subscription_type;"
+    query: "SELECT subscription_type, ROUND(AVG(duration), 2) AS average_duration FROM trip GROUP BY subscription_type;"
   - input: "Find the number of available bikes at station ID 3 at '2015-06-02 12:46:02'."
     query: "SELECT bikes_available FROM status WHERE station_id = 3 AND time = '2015-06-02 12:46:02';"
   - input: "Get the daily maximum temperature for zip code 94107 between '8/29/2013' and '9/3/2013'."
-    query: "SELECT date, max_temperature_f FROM weather WHERE zip_code = 94107 AND date BETWEEN '2013-08-29' AND '2013-09-03' ORDER BY date;"
+    query: "SELECT date, max_temperature_f FROM weather WHERE zip_code = '94107' AND date BETWEEN '2013-08-29' AND '2013-09-03' ORDER BY date;"
   - input: "List all stations with their names, dock counts, and installation dates in San Jose."
     query: "SELECT name, dock_count, installation_date FROM station WHERE city = 'San Jose';"
   - input: "Find the total number of docks available across all stations at '2015-06-02 12:47:02'."
@@ -41,3 +43,17 @@ examples:
     query: "SELECT w.events, COUNT(t.id) AS trip_count FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE CAST(t.start_date AS DATE) BETWEEN '2015-08-21' AND '2015-08-31' GROUP BY w.events;"
   - input: "Which month had the most trips in 2015?"
     query: "SELECT EXTRACT(MONTH FROM start_date) AS month, COUNT(*) AS trip_count FROM trip WHERE EXTRACT(YEAR FROM start_date) = 2015 GROUP BY month ORDER BY trip_count DESC LIMIT 1;"
+  - input: "What is the average trip duration for each city?"
+    query: "SELECT s.city, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.city ORDER BY avg_duration DESC;"
+  - input: "How many trips occurred on rainy days?"
+    query: "SELECT COUNT(t.id) AS trip_count FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date WHERE w.events ILIKE '%rain%';"
+  - input: "What is the average trip duration by temperature category?"
+    query: "SELECT CASE WHEN w.mean_temperature_f < 55 THEN 'Cold' WHEN w.mean_temperature_f BETWEEN 55 AND 75 THEN 'Mild' ELSE 'Hot' END AS temp_category, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY temp_category;"
+  - input: "Find the stations that have never been used as a trip end station."
+    query: "SELECT s.id, s.name FROM station s WHERE NOT EXISTS (SELECT 1 FROM trip t WHERE t.end_station_id = s.id);"
+  - input: "What is the average bikes available per station?"
+    query: "SELECT s.name, ROUND(AVG(st.bikes_available), 2) AS avg_bikes FROM status st JOIN station s ON st.station_id = s.id GROUP BY s.name ORDER BY avg_bikes DESC;"
+  - input: "Which start station had the most trips?"
+    query: "SELECT s.name, COUNT(t.id) AS trip_count FROM trip t JOIN station s ON t.start_station_id = s.id GROUP BY s.name ORDER BY trip_count DESC LIMIT 1;"
+  - input: "What is the average trip duration on rainy versus non-rainy days?"
+    query: "SELECT CASE WHEN w.events ILIKE '%rain%' THEN 'Rainy' ELSE 'Non-Rainy' END AS weather_type, ROUND(AVG(t.duration), 2) AS avg_duration FROM trip t JOIN weather w ON t.zip_code = w.zip_code AND CAST(t.start_date AS DATE) = w.date GROUP BY weather_type;"

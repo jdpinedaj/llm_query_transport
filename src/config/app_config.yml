@@ -2,14 +2,21 @@ model_to_use: "openai"
 analysis_langsmith: true
 
 model_general_parameters:
+  # Non-GPT-5 models (temperature/top_p are ignored by GPT-5.x)
   temperature_generation_refinement: 0.1
   top_p_generation_refinement: 0.1
   temperature_transformation: 0.4
   top_p_transformation: 0.7
+  # GPT-5.x reasoning models use reasoning_effort instead of temperature/top_p
+  # Valid values: "none", "low", "medium", "high" (gpt-5.2 also supports "xhigh")
+  reasoning_effort_generation: "low"
+  reasoning_effort_transformation: "low"
+  max_completion_tokens: 16384
   use_examples_vector_database: true
 
 openai_config:
-  openai_model_generation_refinement: "gpt-4o"
+  # OPENAI_MODEL env var overrides openai_model_generation_refinement
+  openai_model_generation_refinement: "gpt-5.2-2025-12-11"
   openai_model_transformation: "gpt-4-turbo"
   openai_embedding_model: "text-embedding-3-large"
 
@@ -29,7 +36,7 @@ ui:
   page_title: "LLM Query Transport"
   page_icon: "🚲"
   logo_image: "images/upv-logo.png"
-  logo_width: 180
+  logo_width: 300
   container_height: 700
   input_height: 150
   max_container_width: "1800px"

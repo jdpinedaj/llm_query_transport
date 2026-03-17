@@ -210,11 +210,18 @@ class LoadConfig:
         self.top_p_generation_refinement: float = params["top_p_generation_refinement"]
         self.temperature_transformation: float = params["temperature_transformation"]
         self.top_p_transformation: float = params["top_p_transformation"]
+        self.reasoning_effort_generation: str = params["reasoning_effort_generation"]
+        self.reasoning_effort_transformation: str = params["reasoning_effort_transformation"]
+        self.max_completion_tokens: int = params["max_completion_tokens"]
         self.use_examples_vector_database: bool = params["use_examples_vector_database"]
 
     def _load_openai_config(self, config: dict[str, Any]) -> None:
         openai_cfg = config["openai_config"]
-        self.openai_model_generation_refinement: str = openai_cfg["openai_model_generation_refinement"]
+        # OPENAI_MODEL env var overrides the YAML default for generation/refinement
+        self.openai_model_generation_refinement: str = os.getenv(
+            "OPENAI_MODEL",
+            openai_cfg["openai_model_generation_refinement"],
+        )
         self.openai_model_transformation: str = openai_cfg["openai_model_transformation"]
         self.openai_embedding_model: str = openai_cfg["openai_embedding_model"]
 
@@ -227,39 +234,39 @@ class LoadConfig:
         self.show_refined_query: bool = dev["show_refined_query"]
 
     def _load_database_config(self, config: dict[str, Any]) -> None:
-        db = config.get("database", {})
-        self.db_host: str = os.getenv("DB_HOST", db.get("host", "localhost"))
-        self.db_port: str = os.getenv("DB_PORT", db.get("port", "5432"))
+        db = config["database"]
+        self.db_host: str = os.getenv("DB_HOST", db["host"])
+        self.db_port: str = os.getenv("DB_PORT", db["port"])
         self.db_user: str = os.getenv("DB_USER", "")
         self.db_pass: str = os.getenv("DB_PASS", "")
-        self.db_name: str = os.getenv("DB_NAME", db.get("name", "bike_1"))
+        self.db_name: str = os.getenv("DB_NAME", db["name"])
 
     def _load_query_parameters(self, config: dict[str, Any]) -> None:
-        qp = config.get("query_parameters", {})
-        self.decimal_places: int = qp.get("decimal_places", 4)
-        self.sample_size: int = qp.get("sample_size", 50)
-        self.few_shot_k: int = qp.get("few_shot_k", 5)
-        self.top_k: int = qp.get("top_k", 1)
-        self.memory_window_size: int = qp.get("memory_window_size", 5)
+        qp = config["query_parameters"]
+        self.decimal_places: int = qp["decimal_places"]
+        self.sample_size: int = qp["sample_size"]
+        self.few_shot_k: int = qp["few_shot_k"]
+        self.top_k: int = qp["top_k"]
+        self.memory_window_size: int = qp["memory_window_size"]
 
     def _load_ui_config(self, config: dict[str, Any]) -> None:
-        ui = config.get("ui", {})
-        self.page_title: str = ui.get("page_title", "LLM Query Transport")
-        self.page_icon: str = ui.get("page_icon", "🚲")
-        self.logo_image: str = ui.get("logo_image", "images/upv-logo.png")
-        self.logo_width: int = ui.get("logo_width", 180)
-        self.container_height: int = ui.get("container_height", 700)
-        self.input_height: int = ui.get("input_height", 150)
-        self.max_container_width: str = ui.get("max_container_width", "1800px")
-        self.outer_columns: list = ui.get("outer_columns", [0.05, 0.90, 0.05])
-        self.content_columns: list = ui.get("content_columns", [0.40, 0.60])
-        self.input_columns: list = ui.get("input_columns", [0.15, 0.70, 0.15])
-        self.button_columns: list = ui.get("button_columns", [0.15, 0.35, 0.35, 0.15])
-        self.default_query: str = ui.get("default_query", "Get the average duration of trips grouped by zip codes")
-        self.welcome_message: str = ui.get("welcome_message", "Hello! Ask me any question about the bike-sharing database.")
-        self.spinner_text: str = ui.get("spinner_text", "Thinking...")
-        self.csv_filename_prefix: str = ui.get("csv_filename_prefix", "query_results")
-        self.csv_timestamp_format: str = ui.get("csv_timestamp_format", "%Y%m%d_%H%M%S")
+        ui = config["ui"]
+        self.page_title: str = ui["page_title"]
+        self.page_icon: str = ui["page_icon"]
+        self.logo_image: str = ui["logo_image"]
+        self.logo_width: int = ui["logo_width"]
+        self.container_height: int = ui["container_height"]
+        self.input_height: int = ui["input_height"]
+        self.max_container_width: str = ui["max_container_width"]
+        self.outer_columns: list = ui["outer_columns"]
+        self.content_columns: list = ui["content_columns"]
+        self.input_columns: list = ui["input_columns"]
+        self.button_columns: list = ui["button_columns"]
+        self.default_query: str = ui["default_query"]
+        self.welcome_message: str = ui["welcome_message"]
+        self.spinner_text: str = ui["spinner_text"]
+        self.csv_filename_prefix: str = ui["csv_filename_prefix"]
+        self.csv_timestamp_format: str = ui["csv_timestamp_format"]
 
     @property
     def database_uri(self) -> str:
@@ -277,12 +284,37 @@ class LoadConfig:
             self.LANGCHAIN_TRACING_V2 = os.getenv("LANGCHAIN_TRACING_V2")
             self.LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY")
 
-    def _load_llm_models(self) -> None:
-        self.llm_model_generation_refinement = ChatOpenAI(
-            model_name=self.openai_model_generation_refinement,
+    @staticmethod
+    def is_gpt5(model: str) -> bool:
+        """Check if the model is a GPT-5 reasoning model."""
+        return "gpt-5" in model.lower()
+
+    def _build_llm(self, model: str, temperature: float, top_p: float, reasoning_effort: str) -> ChatOpenAI:
+        """Build a ChatOpenAI instance based on model type.
+
+        GPT-5.x reasoning models do not support temperature/top_p/stop;
+        they use reasoning_effort instead.
+        """
+        if self.is_gpt5(model):
+            return _GPT5ChatOpenAI(
+                model=model,
+                api_key=self.OPENAI_API_KEY,
+                reasoning_effort=reasoning_effort,
+                max_completion_tokens=self.max_completion_tokens,
+            )
+        return ChatOpenAI(
+            model=model,
             api_key=self.OPENAI_API_KEY,
+            temperature=temperature,
+            top_p=top_p,
+        )
+
+    def _load_llm_models(self) -> None:
+        self.llm_model_generation_refinement = self._build_llm(
+            model=self.openai_model_generation_refinement,
             temperature=self.temperature_generation_refinement,
             top_p=self.top_p_generation_refinement,
+            reasoning_effort=self.reasoning_effort_generation,
         )
 
         self.embeddings_model = OpenAIEmbeddings(
@@ -290,9 +322,21 @@ class LoadConfig:
             model=self.openai_embedding_model,
         )
 
-        self.llm_model_transformation = ChatOpenAI(
-            model_name=self.openai_model_transformation,
-            api_key=self.OPENAI_API_KEY,
+        self.llm_model_transformation = self._build_llm(
+            model=self.openai_model_transformation,
             temperature=self.temperature_transformation,
             top_p=self.top_p_transformation,
+            reasoning_effort=self.reasoning_effort_transformation,
         )
+
+
+class _GPT5ChatOpenAI(ChatOpenAI):
+    """ChatOpenAI subclass that strips unsupported params (like 'stop') for GPT-5.x.
+
+    LangChain's create_sql_query_chain internally calls llm.bind(stop=[...]),
+    but GPT-5.x reasoning models do not support the 'stop' parameter.
+    """
+
+    def bind(self, **kwargs: Any):
+        kwargs.pop("stop", None)
+        return super().bind(**kwargs)
